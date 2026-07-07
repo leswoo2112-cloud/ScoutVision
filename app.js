@@ -109,3 +109,30 @@ function makeAI(){
 
   ai.textContent = text || "기록이 더 쌓이면 AI 분석이 나옵니다.";
 }
+function back5() {
+  video.currentTime = Math.max(0, video.currentTime - 5);
+}
+
+function forward5() {
+  video.currentTime = Math.min(video.duration, video.currentTime + 5);
+}
+
+function playPause() {
+  if (video.paused) {
+    video.play();
+  } else {
+    video.pause();
+  }
+}
+
+function slow() {
+  video.playbackRate = 0.5;
+}
+
+function normal() {
+  video.playbackRate = 1;
+}
+
+function fast() {
+  video.playbackRate = 2;
+}
