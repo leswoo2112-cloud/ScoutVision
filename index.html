@@ -41,7 +41,7 @@
 
   <div class="card">
     <h2>기록하기</h2>
-    <select id="team">
+    <select id="team" onchange="loadPlayers()">
     <option value="A">🔵 A팀</option>
     <option value="B">🔴 B팀</option>
 </select>
@@ -76,5 +76,6 @@
 <script src="app.js"></script>
 <script src="video.js"></script>
 <script src="storage.js"></script>
+<script src="players.js"></script>
 </body>
 </html>
