@@ -94,7 +94,7 @@ function draw(){
 updateTeamStats();
 updateMVP();
 updateShotChart();
-}
+updateRanking();
 
 function makeAI(){
   let text = "";
