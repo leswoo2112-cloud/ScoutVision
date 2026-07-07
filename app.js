@@ -91,6 +91,7 @@ function draw(){
   });
 
   makeAI();
+updateTeamStats();
 }
 
 function makeAI(){
