@@ -26,6 +26,7 @@ function makePlayer(name){
 
 function record(type){
   let name = document.getElementById("player").value.trim();
+  let team = document.getElementById("team").value;
   if(!name){
     alert("선수 이름 입력!");
     return;
@@ -47,7 +48,7 @@ function record(type){
   if(type === "턴오버"){ p.to++; }
 
   let t = video.currentTime || 0;
-  records.push({ name:name, type:type, time:t });
+  records.push({ team:team, name:name, type:type, time:t });
 
   draw();
 }
