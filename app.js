@@ -95,6 +95,7 @@ updateTeamStats();
 updateMVP();
 updateShotChart();
 updateRanking();
+updateHeatMap();
 
 function makeAI(){
   let text = "";
