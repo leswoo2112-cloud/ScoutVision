@@ -22,6 +22,15 @@
       <h2>경기 영상</h2>
       <input type="file" accept="video/*" onchange="loadVideo(event)">
       <video id="video" controls></video>
+
+<div class="videoControls">
+  <button onclick="back5()">⏪ 5초</button>
+  <button onclick="playPause()">▶️/⏸️</button>
+  <button onclick="forward5()">5초 ⏩</button>
+  <button onclick="slow()">0.5x</button>
+  <button onclick="normal()">1x</button>
+  <button onclick="fast()">2x</button>
+</div>
     </div>
 
     <div class="card timeline">
