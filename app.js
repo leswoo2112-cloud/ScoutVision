@@ -93,6 +93,7 @@ function draw(){
   makeAI();
 updateTeamStats();
 }
+updateMVP();
 
 function makeAI(){
   let text = "";
@@ -110,6 +111,32 @@ function makeAI(){
   });
 
   ai.textContent = text || "기록이 더 쌓이면 AI 분석이 나옵니다.";
+}
+function updateMVP(){
+    let bestName = "";
+    let bestScore = -1;
+
+    Object.entries(players).forEach(function(item){
+        let name = item[0];
+        let p = item[1];
+
+        let score =
+            p.pts +
+            p.reb * 1.2 +
+            p.ast * 1.5 +
+            p.stl * 2 +
+            p.blk * 2 -
+            p.to;
+
+        if(score > bestScore){
+            bestScore = score;
+            bestName = name;
+        }
+    });
+
+    if(bestName){
+        ai.innerHTML += "<br><br>🏆 MVP : <b>" + bestName + "</b>";
+    }
 }
 function back5() {
   video.currentTime = Math.max(0, video.currentTime - 5);
