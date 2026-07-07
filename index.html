@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>ScoutVision</title>
+<style>
+body{margin:0;background:#060b12;color:white;font-family:Arial}
+.wrap{display:grid;grid-template-columns:220px 1.4fr 1fr;gap:18px;padding:20px}
+.side,.card{background:#0d131d;border:1px solid #263244;border-radius:16px;padding:18px}
+.logo{font-size:26px;font-weight:bold;color:#ff8a00}
+button,input,select{background:#151d2b;color:white;border:1px solid #334155;border-radius:10px;padding:10px;margin:5px}
+button{cursor:pointer}
+.main{display:grid;gap:18px}
+video{width:100%;border-radius:14px;background:#000}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:#111827;border-radius:12px;padding:14px;text-align:center}
+.good{color:#22c55e}.bad{color:#ef4444}.orange{color:#ff8a00}
+.timeline div{padding:8px;border-bottom:1px solid #263244;cursor:pointer}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="side">
+    <div class="logo">🏀 ScoutVision</div>
+    <p>경기 영상 분석</p>
+    <p>선수 분석</p>
+    <p>슛 성공률</p>
+    <p>AI 분석</p>
+  </div>
+
+  <div class="main">
+    <div class="card">
+      <h2>경기 영상</h2>
+      <input type="file" accept="video/*" onchange="loadVideo(event)">
+      <video id="video" controls></video>
+    </div>
+
+    <div class="card timeline">
+      <h2>기록 타임라인</h2>
+      <div id="events"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>기록하기</h2>
+    <input id="player" placeholder="선수 이름"><br>
+
+    <button onclick="record('2P 성공')">2P 성공</button>
+    <button onclick="record('2P 실패')">2P 실패</button>
+    <button onclick="record('3P 성공')">3P 성공</button>
+    <button onclick="record('3P 실패')">3P 실패</button>
+    <button onclick="record('FT 성공')">FT 성공</button>
+    <button onclick="record('FT 실패')">FT 실패</button>
+    <button onclick="record('리바운드')">리바운드</button>
+    <button onclick="record('어시스트')">어시스트</button>
+    <button onclick="record('스틸')">스틸</button>
+    <button onclick="record('블록')">블록</button>
+    <button onclick="record('턴오버')">턴오버</button>
+
+    <h2>선수 분석</h2>
+    <div class="stats" id="stats"></div>
+
+    <h2>AI 한줄평</h2>
+    <div id="ai" class="card">아직 기록 없음</div>
+  </div>
+
+</div>
+
+<script>
+let records=[];
+let players={};
+
+function loadVideo(e){
+  let file=e.target.files[0];
+  video.src=URL.createObjectURL(file);
+}
+
+function timeText(t){
+  let m=Math.floor(t/60);
+  let s=Math.floor(t%60);
+  return m+":"+String(s).padStart(2,"0");
+}
+
+function makePlayer(name){
+  if(!players[name]){
+    players[name]={pts:0,fgm:0,fga:0,threeM:0,threeA:0,ftm:0,fta:0,reb:0,ast:0,stl:0,blk:0,to:0};
+  }
+}
+
+function record(type){
+  let name=document.getElementById("player").value.trim();
+  if(!name){alert("선수 이름 입력!");return;}
+
+  makePlayer(name);
+  let p=players[name];
+
+  if(type==="2P 성공"){p.pts+=2;p.fgm++;p.fga++;}
+  if(type==="2P 실패"){p.fga++;}
+  if(type==="3P 성공"){p.pts+=3;p.fgm++;p.fga++;p.threeM++;p.threeA++;}
+  if(type==="3P 실패"){p.fga++;p.threeA++;}
+  if(type==="FT 성공"){p.pts+=1;p.ftm++;p.fta++;}
+  if(type==="FT 실패"){p.fta++;}
+  if(type==="리바운드")p.reb++;
+  if(type==="어시스트")p.ast++;
+  if(type==="스틸")p.stl++;
+  if(type==="블록")p.blk++;
+  if(type==="턴오버")p.to++;
+
+  let t=video.currentTime||0;
+  records.push({name,type,time:t});
+  draw();
+}
+
+function draw(){
+  events.innerHTML="";
+  records.forEach(r=>{
+    let div=document.createElement("div");
+    div.textContent=timeText(r.time)+" | "+r.name+" | "+r.type;
+    div.onclick=()=>{video.currentTime=r.time;video.play();}
+    events.appendChild(div);
+  });
+
+  stats.innerHTML="";
+  Object.entries(players).forEach(([name,p])=>{
+    let fg=p.fga?Math.round(p.fgm/p.fga*100):0;
+    let three=p.threeA?Math.round(p.threeM/p.threeA*100):0;
+    let ft=p.fta?Math.round(p.ftm/p.fta*100):0;
+
+    let box=document.createElement("div");
+    box.className="stat";
+    box.innerHTML=
+      "<b>"+name+"</b><br>"+
+      "득점 "+p.pts+"<br>"+
+      "FG% "+fg+"%<br>"+
+      "3P% "+three+"%<br>"+
+      "FT% "+ft+"%<br>"+
+      "REB "+p.reb+" AST "+p.ast+"<br>"+
+      "STL "+p.stl+" BLK "+p.blk+" TO "+p.to;
+    stats.appendChild(box);
+  });
+
+  makeAI();
+}
+
+function makeAI(){
+  let text="";
+
+  Object.entries(players).forEach(([name,p])=>{
+    let fg=p.fga?Math.round(p.fgm/p.fga*100):0;
+
+    if(p.pts>=15) text+=name+"은 득점력이 좋았습니다. ";
+    if(fg>=50 && p.fga>=4) text+=name+"은 슛 효율이 좋았습니다. ";
+    if(p.to>=3) text+=name+"은 턴오버 관리가 필요합니다. ";
+    if(p.ast>=5) text+=name+"은 패스 기여도가 높았습니다. ";
+  });
+
+  ai.textContent=text||"기록이 더 쌓이면 AI 분석이 나옵니다.";
+}
+</script>
+</body>
+</html>
