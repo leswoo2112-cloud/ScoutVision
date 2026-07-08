@@ -1,45 +1,25 @@
-function makeUI2(){
-  const right = document.querySelector(".right");
-  if(!right) return;
-
-  if(!document.getElementById("scoreboard2")){
-    const score = document.createElement("div");
-    score.id = "scoreboard2";
-    score.className = "card";
-    right.prepend(score);
-  }
-
-  if(!document.getElementById("players2")){
-    const players = document.createElement("div");
-    players.id = "players2";
-    players.className = "card";
-
-    const team = document.getElementById("team");
-    if(team && team.parentNode){
-      team.parentNode.insertBefore(players, team.nextSibling);
-    } else {
-      right.prepend(players);
-    }
-  }
-
-  updateScoreboard2();
-  renderPlayers2();
-}
-
 window.addEventListener("load", function(){
-  makeUI2();
+  setTimeout(function(){
+    const right = document.querySelector(".right");
+    if(!right) return;
 
-  const oldRecord = window.record;
+    let score = document.getElementById("scoreboard2");
+    if(!score){
+      score = document.createElement("div");
+      score.id = "scoreboard2";
+      score.className = "card";
+      right.insertBefore(score, right.firstChild);
+    }
 
-  window.record = function(type){
-    const teamBox = document.getElementById("team");
-    const team = teamBox ? teamBox.value : "A";
+    let players = document.getElementById("players2");
+    if(!players){
+      players = document.createElement("div");
+      players.id = "players2";
+      players.className = "card";
+      right.insertBefore(players, right.children[1]);
+    }
 
-    if(type === "2P 성공") addScore(team, 2);
-    if(type === "3P 성공") addScore(team, 3);
-    if(type === "FT 성공") addScore(team, 1);
-    if(type === "파울") addFoul(team);
-
-    oldRecord(type);
-  };
+    if(typeof updateScoreboard2 === "function") updateScoreboard2();
+    if(typeof renderPlayers2 === "function") renderPlayers2();
+  }, 500);
 });
