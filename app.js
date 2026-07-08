@@ -1,5 +1,9 @@
 let records = [];
 let players = {};
+const video = document.getElementById("video");
+const events = document.getElementById("events");
+const stats = document.getElementById("stats");
+const ai = document.getElementById("ai");
 
 function loadVideo(e){
   let file = e.target.files[0];
@@ -50,7 +54,7 @@ function record(type){
   let t = video.currentTime || 0;
   records.push({ team:team, name:name, type:type, time:t });
 
-  // draw();
+  draw();
 }
 
 function draw(){
