@@ -50,7 +50,7 @@ function record(type){
   let t = video.currentTime || 0;
   records.push({ team:team, name:name, type:type, time:t });
 
-  draw();
+  // draw();
 }
 
 function draw(){
