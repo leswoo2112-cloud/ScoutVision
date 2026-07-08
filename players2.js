@@ -64,3 +64,16 @@ function renderPlayers2(){
 window.addEventListener("load", function(){
   renderPlayers2();
 });
+const oldRecord2 = window.record;
+
+window.record = function(type){
+    const playerInput = document.getElementById("player");
+
+    if(selectedPlayer2 && playerInput){
+        playerInput.value = selectedPlayer2;
+    }
+
+    if(typeof oldRecord2 === "function"){
+        oldRecord2(type);
+    }
+};
