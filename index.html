@@ -43,10 +43,16 @@
     <h2>기록하기</h2>
     <div id="scoreboard2" class="card"></div>
 <div id="players2" class="card"></div>
-    <select id="team" onchange="loadPlayers()">
+    <select id="team" onchange="renderPlayers2()">
+
     <option value="A">🔵 A팀</option>
     <option value="B">🔴 B팀</option>
 </select>
+<br><br>
+
+<input id="newPlayer2" placeholder="선수 이름 입력">
+<button onclick="addPlayer2()">➕ 선수 추가</button>
+
 <br><br>
     <input id="player" placeholder="선수 이름"><br>
 
