@@ -91,13 +91,13 @@ function draw(){
   });
 
   makeAI();
-updateTeamStats();
-updateMVP();
-updateShotChart();
-updateRanking();
-updateHeatMap();
-updateReport();
-initCourt();
+if (typeof updateTeamStats === "function") updateTeamStats();
+if (typeof updateMVP === "function") updateMVP();
+if (typeof updateShotChart === "function") updateShotChart();
+if (typeof updateRanking === "function") updateRanking();
+if (typeof updateHeatMap === "function") updateHeatMap();
+if (typeof updateReport === "function") updateReport();
+if (typeof initCourt === "function") initCourt();
 
 function makeAI(){
   let text = "";
