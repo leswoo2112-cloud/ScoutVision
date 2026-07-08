@@ -42,3 +42,6 @@ function updateScoreboard2(){
     <button onclick="resetScoreboard2()">점수판 초기화</button>
   `;
 }
+window.addEventListener("load", function(){
+  updateScoreboard2();
+});
