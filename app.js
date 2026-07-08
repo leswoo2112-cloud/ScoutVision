@@ -97,6 +97,7 @@ updateShotChart();
 updateRanking();
 updateHeatMap();
 updateReport();
+initCourt();
 
 function makeAI(){
   let text = "";
