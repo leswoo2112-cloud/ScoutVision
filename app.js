@@ -96,6 +96,7 @@ updateMVP();
 updateShotChart();
 updateRanking();
 updateHeatMap();
+updateReport();
 
 function makeAI(){
   let text = "";
