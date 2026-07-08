@@ -30,3 +30,6 @@ function renderPlayers2(){
     box.appendChild(btn);
   });
 }
+window.addEventListener("load", function(){
+  renderPlayers2();
+});
