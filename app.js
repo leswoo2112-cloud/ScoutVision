@@ -116,6 +116,7 @@ function draw(){
   if(typeof updateRanking === "function") updateRanking();
   if(typeof updateHeatMap === "function") updateHeatMap();
   if(typeof updateReport === "function") updateReport();
+  if(typeof updateReport2 === "function") updateReport2();
 }
 
 function makeAI(){
