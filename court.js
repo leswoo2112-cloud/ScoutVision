@@ -49,3 +49,8 @@ function drawCourt() {
         ctx.fill();
     });
 }
+window.addEventListener("load", function(){
+  setTimeout(function(){
+    drawCourt();
+  }, 800);
+});
