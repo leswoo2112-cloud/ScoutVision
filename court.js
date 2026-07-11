@@ -139,5 +139,6 @@ function drawCourt() {
 window.addEventListener("load", function () {
     setTimeout(function () {
         initCourt();
+        drawCourt();
     }, 300);
 });
