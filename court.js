@@ -139,6 +139,12 @@ function drawCourt() {
 window.addEventListener("load", function () {
     setTimeout(function () {
         initCourt();
-        drawCourt();
+
+        function loop() {
+            drawCourt();
+            requestAnimationFrame(loop);
+        }
+
+        loop();
     }, 300);
 });
