@@ -12,22 +12,14 @@ function addShotPoint(x, y) {
         x: x,
         y: y,
         made: shotMode === "make",
-        time: videoBox ? videoBox.currentTime || 0 : 0,
+        time: videoBox ? (videoBox.currentTime || 0) : 0,
         player: playerInput
-            ? playerInput.value.trim() || "선수"
+            ? (playerInput.value.trim() || "선수")
             : "선수"
     });
 
     if (typeof window.scoutDrawCourt === "function") {
         window.scoutDrawCourt();
-    }
-
-    if (typeof updateShotChart === "function") {
-        updateShotChart();
-    }
-
-    if (typeof updateHeatMap === "function") {
-        updateHeatMap();
     }
 }
 
@@ -36,14 +28,6 @@ function clearShots() {
 
     if (typeof window.scoutDrawCourt === "function") {
         window.scoutDrawCourt();
-    }
-
-    if (typeof updateShotChart === "function") {
-        updateShotChart();
-    }
-
-    if (typeof updateHeatMap === "function") {
-        updateHeatMap();
     }
 }
 
