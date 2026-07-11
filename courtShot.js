@@ -5,10 +5,6 @@ function setShotMode(mode) {
 }
 
 function addShotPoint(x, y) {
-    if (typeof shots === "undefined") {
-        shots = [];
-    }
-
     const playerInput = document.getElementById("player");
     const videoBox = document.getElementById("video");
 
@@ -16,12 +12,14 @@ function addShotPoint(x, y) {
         x: x,
         y: y,
         made: shotMode === "make",
-        time: videoBox ? (videoBox.currentTime || 0) : 0,
-        player: playerInput ? (playerInput.value.trim() || "선수") : "선수"
+        time: videoBox ? videoBox.currentTime || 0 : 0,
+        player: playerInput
+            ? playerInput.value.trim() || "선수"
+            : "선수"
     });
 
-    if (typeof drawCourt === "function") {
-        drawCourt();
+    if (typeof window.scoutDrawCourt === "function") {
+        window.scoutDrawCourt();
     }
 
     if (typeof updateShotChart === "function") {
@@ -34,10 +32,10 @@ function addShotPoint(x, y) {
 }
 
 function clearShots() {
-    shots = [];
+    shots.length = 0;
 
-    if (typeof drawCourt === "function") {
-        drawCourt();
+    if (typeof window.scoutDrawCourt === "function") {
+        window.scoutDrawCourt();
     }
 
     if (typeof updateShotChart === "function") {
@@ -50,13 +48,13 @@ function clearShots() {
 }
 
 function countMade() {
-    return shots.filter(function (s) {
-        return s.made;
+    return shots.filter(function (shot) {
+        return shot.made;
     }).length;
 }
 
 function countMiss() {
-    return shots.filter(function (s) {
-        return !s.made;
+    return shots.filter(function (shot) {
+        return !shot.made;
     }).length;
 }
