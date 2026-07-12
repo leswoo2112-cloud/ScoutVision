@@ -168,3 +168,76 @@ window.onload = function(){
   draw();
   if(typeof initCourt === "function") initCourt();
 };
+document.getElementById("undoBtn").onclick = function () {
+
+    if(records.length === 0){
+        alert("취소할 기록이 없습니다.");
+        return;
+    }
+
+    const r = records.pop();
+    const p = players[r.name];
+
+    if(!p){
+        draw();
+        return;
+    }
+
+    switch(r.type){
+
+        case "2P 성공":
+            p.pts -= 2;
+            p.fgm--;
+            p.fga--;
+            break;
+
+        case "2P 실패":
+            p.fga--;
+            break;
+
+        case "3P 성공":
+            p.pts -= 3;
+            p.fgm--;
+            p.fga--;
+            p.threeM--;
+            p.threeA--;
+            break;
+
+        case "3P 실패":
+            p.fga--;
+            p.threeA--;
+            break;
+
+        case "FT 성공":
+            p.pts--;
+            p.ftm--;
+            p.fta--;
+            break;
+
+        case "FT 실패":
+            p.fta--;
+            break;
+
+        case "리바운드":
+            p.reb--;
+            break;
+
+        case "어시스트":
+            p.ast--;
+            break;
+
+        case "스틸":
+            p.stl--;
+            break;
+
+        case "블록":
+            p.blk--;
+            break;
+
+        case "턴오버":
+            p.to--;
+            break;
+    }
+
+    draw();
+};
