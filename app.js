@@ -276,7 +276,14 @@ document.getElementById("undoBtn").onclick = function () {
             p.to--;
             break;
     }
-
+if (
+    r.type === "2P 성공" ||
+    r.type === "3P 성공" ||
+    r.type === "FT 성공"
+) {
+    if (scoreHistoryA.length > 1) scoreHistoryA.pop();
+    if (scoreHistoryB.length > 1) scoreHistoryB.pop();
+}
 draw();
 drawScoreChart();
 };
