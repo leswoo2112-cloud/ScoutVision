@@ -1,5 +1,7 @@
 let records = [];
 let players = {};
+let scoreHistoryA = [0];
+let scoreHistoryB = [0];
 
 const video = document.getElementById("video");
 const events = document.getElementById("events");
@@ -62,6 +64,40 @@ function record(type){
     type: type,
     time: t
   });
+  const lastA = scoreHistoryA[scoreHistoryA.length - 1];
+const lastB = scoreHistoryB[scoreHistoryB.length - 1];
+
+if(type === "2P 성공"){
+    if(team === "A"){
+        scoreHistoryA.push(lastA + 2);
+        scoreHistoryB.push(lastB);
+    }else{
+        scoreHistoryA.push(lastA);
+        scoreHistoryB.push(lastB + 2);
+    }
+}
+
+if(type === "3P 성공"){
+    if(team === "A"){
+        scoreHistoryA.push(lastA + 3);
+        scoreHistoryB.push(lastB);
+    }else{
+        scoreHistoryA.push(lastA);
+        scoreHistoryB.push(lastB + 3);
+    }
+}
+
+if(type === "FT 성공"){
+    if(team === "A"){
+        scoreHistoryA.push(lastA + 1);
+        scoreHistoryB.push(lastB);
+    }else{
+        scoreHistoryA.push(lastA);
+        scoreHistoryB.push(lastB + 1);
+    }
+}
+
+drawScoreChart();
 
   draw();
 }
@@ -166,6 +202,7 @@ function fast(){
 
 window.onload = function(){
   draw();
+  drawScoreChart();
   if(typeof initCourt === "function") initCourt();
 };
 document.getElementById("undoBtn").onclick = function () {
@@ -180,6 +217,7 @@ document.getElementById("undoBtn").onclick = function () {
 
     if(!p){
         draw();
+        drawScoreChart();
         return;
     }
 
@@ -239,5 +277,66 @@ document.getElementById("undoBtn").onclick = function () {
             break;
     }
 
-    draw();
+draw();
+drawScoreChart();
 };
+function drawScoreChart() {
+    const canvas = document.getElementById("scoreChart");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    const width = canvas.width;
+    const height = canvas.height;
+    const padding = 35;
+
+    ctx.clearRect(0, 0, width, height);
+
+    ctx.fillStyle = "#111827";
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 1;
+
+    for (let i = 0; i <= 5; i++) {
+        const y = padding + ((height - padding * 2) / 5) * i;
+
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(width - padding, y);
+        ctx.stroke();
+    }
+
+    const maxScore = Math.max(
+        10,
+        ...scoreHistoryA,
+        ...scoreHistoryB
+    );
+
+    drawTeamLine(scoreHistoryA, "#3b82f6");
+    drawTeamLine(scoreHistoryB, "#ef4444");
+
+    function drawTeamLine(history, color) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+
+        history.forEach(function (score, index) {
+            const denominator = Math.max(history.length - 1, 1);
+            const x =
+                padding +
+                (index / denominator) *
+                (width - padding * 2);
+
+            const y =
+                height -
+                padding -
+                (score / maxScore) *
+                (height - padding * 2);
+
+            if (index === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        });
+
+        ctx.stroke();
+    }
+}
