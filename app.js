@@ -203,6 +203,7 @@ function fast(){
 window.onload = function(){
   draw();
   drawScoreChart();
+  updateLeaderboard();
   if(typeof initCourt === "function") initCourt();
 };
 document.getElementById("undoBtn").onclick = function () {
@@ -218,6 +219,7 @@ document.getElementById("undoBtn").onclick = function () {
     if(!p){
         draw();
         drawScoreChart();
+        updateLeaderboard();
         return;
     }
 
@@ -286,6 +288,7 @@ if (
 }
 draw();
 drawScoreChart();
+updateLeaderboard();
 };
 function drawScoreChart() {
     const canvas = document.getElementById("scoreChart");
