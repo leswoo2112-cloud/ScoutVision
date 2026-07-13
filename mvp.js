@@ -14,13 +14,18 @@ function updateMVP(){
 
         const fg = p.fga ? Math.round((p.fgm / p.fga) * 100) : 0;
 
-        let score =
-            p.pts +
-            p.reb * 1.2 +
-            p.ast * 1.5 +
-            p.stl * 2 +
-            p.blk * 2 -
-            p.to;
+        const missedShots = Math.max(0, p.fga - p.fgm);
+const missedFT = Math.max(0, p.fta - p.ftm);
+
+let score =
+    p.pts +
+    p.reb * 1.2 +
+    p.ast * 1.5 +
+    p.stl * 2.5 +
+    p.blk * 2.5 -
+    p.to * 1.5 -
+    missedShots * 0.5 -
+    missedFT * 0.25;
 
         if(score > bestScore){
             bestScore = score;
@@ -48,7 +53,8 @@ function updateMVP(){
         어시스트 ${bestPlayer.ast}<br>
         스틸 ${bestPlayer.stl}<br>
         블록 ${bestPlayer.blk}<br>
-        FG ${fg}%
+        FG ${fg}%<br>
+MVP 점수 ${bestScore.toFixed(1)}
         </p>
     `;
 }
