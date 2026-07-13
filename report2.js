@@ -1,66 +1,129 @@
-function updateReport2(){
-  const reportBox = document.getElementById("report2");
-  if(!reportBox) return;
+function updateReport2() {
+    const box = document.getElementById("report2");
+    if (!box) return;
 
-  const playerList = Object.entries(players);
+    const playerList = Object.entries(players || {});
 
-  if(playerList.length === 0){
-    reportBox.innerHTML = "아직 경기 기록이 없습니다.";
-    return;
-  }
-
-  let bestPts = ["없음", 0];
-  let bestReb = ["없음", 0];
-  let bestAst = ["없음", 0];
-
-  playerList.forEach(function(item){
-    const name = item[0];
-    const p = item[1];
-
-    if(p.pts > bestPts[1]){
-      bestPts = [name, p.pts];
+    if (playerList.length === 0 || records.length === 0) {
+        box.innerHTML = "아직 경기 기록이 없습니다.";
+        return;
     }
 
-    if(p.reb > bestReb[1]){
-      bestReb = [name, p.reb];
+    function findLeader(stat) {
+        let leaderName = "-";
+        let leaderValue = -1;
+
+        playerList.forEach(function ([name, player]) {
+            const value = Number(player[stat] || 0);
+
+            if (value > leaderValue) {
+                leaderName = name;
+                leaderValue = value;
+            }
+        });
+
+        return {
+            name: leaderName,
+            value: Math.max(leaderValue, 0)
+        };
     }
 
-    if(p.ast > bestAst[1]){
-      bestAst = [name, p.ast];
+    function getMVP() {
+        let bestName = "-";
+        let bestScore = -Infinity;
+
+        playerList.forEach(function ([name, p]) {
+            const missedShots = Math.max(
+                0,
+                Number(p.fga || 0) - Number(p.fgm || 0)
+            );
+
+            const missedFT = Math.max(
+                0,
+                Number(p.fta || 0) - Number(p.ftm || 0)
+            );
+
+            const score =
+                Number(p.pts || 0) +
+                Number(p.reb || 0) * 1.2 +
+                Number(p.ast || 0) * 1.5 +
+                Number(p.stl || 0) * 2.5 +
+                Number(p.blk || 0) * 2.5 -
+                Number(p.to || 0) * 1.5 -
+                missedShots * 0.5 -
+                missedFT * 0.25;
+
+            if (score > bestScore) {
+                bestName = name;
+                bestScore = score;
+            }
+        });
+
+        return {
+            name: bestName,
+            score: bestScore === -Infinity ? 0 : bestScore
+        };
     }
-  });
 
-  reportBox.innerHTML =
-    "<h2>📋 경기 리포트</h2>" +
-    "<b>최고 득점</b><br>" +
-    bestPts[0] + " " + bestPts[1] + "점<br><br>" +
+    const scoringLeader = findLeader("pts");
+    const reboundLeader = findLeader("reb");
+    const assistLeader = findLeader("ast");
+    const stealLeader = findLeader("stl");
+    const blockLeader = findLeader("blk");
+    const mvp = getMVP();
 
-    "<b>최다 리바운드</b><br>" +
-    bestReb[0] + " " + bestReb[1] + "개<br><br>" +
+    const scoreA =
+        typeof scoreHistoryA !== "undefined"
+            ? scoreHistoryA[scoreHistoryA.length - 1] || 0
+            : 0;
 
-    "<b>최다 어시스트</b><br>" +
-    bestAst[0] + " " + bestAst[1] + "개<br><br>" +
+    const scoreB =
+        typeof scoreHistoryB !== "undefined"
+            ? scoreHistoryB[scoreHistoryB.length - 1] || 0
+            : 0;
 
-    "<b>AI 한줄평</b><br>" +
-    makeReport2Text(bestPts, bestReb, bestAst);
+    let resultText = "무승부";
+
+    if (scoreA > scoreB) resultText = "🔵 A팀 승리";
+    if (scoreB > scoreA) resultText = "🔴 B팀 승리";
+
+    let analysis = "두 팀이 치열한 경기를 펼쳤습니다.";
+
+    if (scoreA > scoreB) {
+        analysis = "A팀이 더 높은 득점력을 바탕으로 경기를 앞섰습니다.";
+    } else if (scoreB > scoreA) {
+        analysis = "B팀이 더 높은 득점력을 바탕으로 경기를 앞섰습니다.";
+    }
+
+    box.innerHTML = `
+        <h2>📋 경기 리포트</h2>
+
+        <h3>${resultText}</h3>
+        <p>🔵 A팀 ${scoreA} : ${scoreB} B팀 🔴</p>
+
+        <hr>
+
+        <p>🏆 <b>MVP</b><br>
+        ${mvp.name} · MVP 점수 ${mvp.score.toFixed(1)}</p>
+
+        <p>🏀 <b>최다 득점</b><br>
+        ${scoringLeader.name} · ${scoringLeader.value}점</p>
+
+        <p>💪 <b>최다 리바운드</b><br>
+        ${reboundLeader.name} · ${reboundLeader.value}개</p>
+
+        <p>🤝 <b>최다 어시스트</b><br>
+        ${assistLeader.name} · ${assistLeader.value}개</p>
+
+        <p>🛡️ <b>최다 스틸</b><br>
+        ${stealLeader.name} · ${stealLeader.value}개</p>
+
+        <p>🚫 <b>최다 블록</b><br>
+        ${blockLeader.name} · ${blockLeader.value}개</p>
+
+        <hr>
+
+        <p>🤖 <b>자동 분석</b><br>
+        ${analysis}</p>
+    `;
 }
-
-function makeReport2Text(bestPts, bestReb, bestAst){
-  if(bestPts[1] >= 15){
-    return bestPts[0] + "의 득점력이 돋보인 경기였습니다.";
-  }
-
-  if(bestAst[1] >= 5){
-    return bestAst[0] + "의 패스 전개가 좋았습니다.";
-  }
-
-  if(bestReb[1] >= 7){
-    return bestReb[0] + "의 리바운드 기여가 컸습니다.";
-  }
-
-  return "전체적으로 기록이 더 쌓이면 더 정확한 분석이 가능합니다.";
-}
-
-window.addEventListener("load", function(){
-  updateReport2();
-});
