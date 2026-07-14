@@ -156,6 +156,7 @@ function draw(){
 if(typeof updatePlayerType === "function") updatePlayerType();
 if(typeof updateHotPlayer === "function") updateHotPlayer();
 if(typeof updateGrowth === "function") updateGrowth();
+if(typeof updateWinPrediction==="function") updateWinPrediction();
 }
 
 function makeAI(){
