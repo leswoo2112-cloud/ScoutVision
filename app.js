@@ -155,6 +155,7 @@ function draw(){
   if(typeof updateOVR === "function") updateOVR();
 if(typeof updatePlayerType === "function") updatePlayerType();
 if(typeof updateHotPlayer === "function") updateHotPlayer();
+if(typeof updateGrowth === "function") updateGrowth();
 }
 
 function makeAI(){
