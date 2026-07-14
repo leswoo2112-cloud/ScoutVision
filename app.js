@@ -209,6 +209,7 @@ window.onload = function(){
   updateTeamCompare();
   updateOVR();
   updatePlayerType();
+  updateHotPlayer();
   if(typeof initCourt === "function") initCourt();
 };
 document.getElementById("undoBtn").onclick = function () {
@@ -228,6 +229,7 @@ document.getElementById("undoBtn").onclick = function () {
         updateTeamCompare();
         updateOVR();
         updatePlayerType();
+        updateHotPlayer();
         return;
     }
 
@@ -300,6 +302,7 @@ updateLeaderboard();
 updateTeamCompare();
 updateOVR();
 updatePlayerType();
+updateHotPlayer();
 };
 function drawScoreChart() {
     const canvas = document.getElementById("scoreChart");
