@@ -28,10 +28,11 @@ function updateOVR() {
         ovr = Math.max(50, Math.min(99, Math.round(ovr)));
 
         html += `
-        <div style="padding:10px;border-bottom:1px solid #333;">
-            <b>${name}</b><br>
-            ⭐ OVR <span style="color:#FFD700;font-size:24px">${ovr}</span>
-        </div>`;
+    <div style="padding:10px; border-bottom:1px solid #333;">
+        <b>${name}</b><br>
+        ⭐ OVR <span style="color:#FFD700; font-size:24px;">${ovr}</span>
+    </div>
+`;
     });
 
     box.innerHTML = html;
