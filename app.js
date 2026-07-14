@@ -233,6 +233,7 @@ document.getElementById("undoBtn").onclick = function () {
         updateOVR();
         updatePlayerType();
         updateHotPlayer();
+        if(typeof updateWinPrediction==="function") updateWinPrediction();
         return;
     }
 
