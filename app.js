@@ -204,6 +204,7 @@ window.onload = function(){
   draw();
   drawScoreChart();
   updateLeaderboard();
+  updateTeamCompare();
   if(typeof initCourt === "function") initCourt();
 };
 document.getElementById("undoBtn").onclick = function () {
@@ -220,6 +221,7 @@ document.getElementById("undoBtn").onclick = function () {
         draw();
         drawScoreChart();
         updateLeaderboard();
+        updateTeamCompare();
         return;
     }
 
@@ -289,6 +291,7 @@ if (
 draw();
 drawScoreChart();
 updateLeaderboard();
+updateTeamCompare();
 };
 function drawScoreChart() {
     const canvas = document.getElementById("scoreChart");
