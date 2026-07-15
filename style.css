@@ -695,3 +695,228 @@ tbody tr:hover {
         min-width: 690px;
     }
 }
+/* ========================================
+   ScoutVision 4.0
+   영상 + 점수판 통합 배치
+======================================== */
+
+/* 전체 배경 */
+body {
+    background:
+        radial-gradient(
+            circle at 45% 5%,
+            rgba(37, 99, 235, 0.2),
+            transparent 34%
+        ),
+        radial-gradient(
+            circle at 90% 75%,
+            rgba(249, 115, 22, 0.12),
+            transparent 32%
+        ),
+        linear-gradient(
+            145deg,
+            #050914 0%,
+            #08111f 48%,
+            #050913 100%
+        );
+    background-attachment: fixed;
+}
+
+
+/* 왼쪽 메뉴 + 영상 + 기록 화면 */
+.container {
+    display: grid;
+    grid-template-columns:
+        220px
+        minmax(370px, 0.9fr)
+        minmax(620px, 1.45fr);
+
+    align-items: start;
+    gap: 16px;
+    padding: 16px;
+}
+
+
+/* 영상 패널과 기록 패널을 같은 디자인으로 연결 */
+.video-panel,
+.main-panel,
+.middle,
+.right {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(12, 20, 35, 0.98),
+            rgba(7, 13, 25, 0.98)
+        );
+
+    border: 1px solid rgba(96, 165, 250, 0.22);
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+
+/* 영상 화면을 점수판 높이에 맞게 크게 */
+.video-panel video,
+.middle video,
+video {
+    width: 100%;
+    min-height: 270px;
+    max-height: 420px;
+    object-fit: contain;
+
+    background: #000;
+    border: 2px solid rgba(96, 165, 250, 0.25);
+    border-radius: 16px;
+}
+
+
+/* 영상 제목 */
+.video-panel h2,
+.middle h2 {
+    margin-top: 0;
+}
+
+
+/* 점수판을 오른쪽 화면 맨 위에서 크게 표시 */
+#scoreboard,
+.scoreboard {
+    position: relative;
+    margin-top: 0;
+    min-height: 270px;
+
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+
+    padding: 28px;
+
+    background:
+        radial-gradient(
+            circle at 20% 50%,
+            rgba(37, 99, 235, 0.2),
+            transparent 42%
+        ),
+        radial-gradient(
+            circle at 80% 50%,
+            rgba(239, 68, 68, 0.18),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            #0b1425,
+            #070d19
+        );
+
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 18px;
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+/* A팀·B팀 점수 크게 */
+#scoreA,
+#aScore,
+#teamAScore,
+#scoreB,
+#bScore,
+#teamBScore {
+    font-size: clamp(48px, 6vw, 82px);
+    font-weight: 950;
+}
+
+
+/* 영상 조작 버튼 */
+.video-panel .controls,
+.middle .controls {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.video-panel .controls button,
+.middle .controls button {
+    width: 100%;
+}
+
+
+/* 영상 파일 선택창 */
+.video-panel input[type="file"],
+.middle input[type="file"] {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+
+/* 점수판 아래 기록 영역 간격 */
+#scoreboard + .card,
+.scoreboard + .card {
+    margin-top: 16px;
+}
+
+
+/* 왼쪽 메뉴는 화면에 고정 */
+.sidebar,
+.left {
+    position: sticky;
+    top: 16px;
+    height: calc(100vh - 32px);
+}
+
+
+/* 영상도 스크롤할 때 상단에 남도록 */
+.video-panel,
+.middle {
+    position: sticky;
+    top: 16px;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+}
+
+
+/* 아이패드 세로 또는 작은 화면 */
+@media (max-width: 1050px) {
+    .container {
+        grid-template-columns: 190px 1fr 1.25fr;
+        gap: 11px;
+        padding: 11px;
+    }
+
+    #scoreboard,
+    .scoreboard,
+    .video-panel video,
+    .middle video,
+    video {
+        min-height: 230px;
+    }
+}
+
+
+/* 휴대폰 화면 */
+@media (max-width: 760px) {
+    .container {
+        display: block;
+        padding: 9px;
+    }
+
+    .sidebar,
+    .left,
+    .video-panel,
+    .middle {
+        position: static;
+        width: 100%;
+        height: auto;
+        max-height: none;
+        margin-bottom: 12px;
+    }
+
+    #scoreboard,
+    .scoreboard {
+        min-height: 220px;
+    }
+}
