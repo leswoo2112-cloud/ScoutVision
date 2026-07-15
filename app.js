@@ -158,6 +158,7 @@ if(typeof updateHotPlayer === "function") updateHotPlayer();
 if(typeof updateGrowth === "function") updateGrowth();
 if(typeof updateWinPrediction==="function") updateWinPrediction();
 if(typeof updateBestLineup === "function") updateBestLineup();
+if(typeof updateCoachAI==="function") updateCoachAI();
 }
 
 function makeAI(){
