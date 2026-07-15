@@ -19,7 +19,7 @@
 
   <div class="main">
     <div class="card game-view-card">
-    <h2>🏀 경기 영상 · 점수판</h2>
+    <h2>🏀 경기 영상 · 점수판 · 기록하기</h2>
 
     <div class="game-view-grid">
 
@@ -42,8 +42,59 @@
             </div>
         </div>
 
-        <div class="score-area">
-            <div id="scoreboard2"></div>
+        <div class="record-side">
+
+            <div class="score-area">
+                <div id="scoreboard2"></div>
+            </div>
+
+            <div class="record-area">
+                <h3>📝 기록하기</h3>
+
+                <div id="players2"></div>
+
+                <select id="team" onchange="renderPlayers()">
+                    <option value="A">🔵 A팀</option>
+                    <option value="B">🔴 B팀</option>
+                </select>
+
+                <div class="player-add-row">
+                    <input
+                        id="newPlayer2"
+                        placeholder="선수 이름 입력"
+                    >
+                    <button onclick="addPlayer2()">＋ 선수 추가</button>
+                </div>
+
+                <input
+                    id="player"
+                    placeholder="선수 이름"
+                >
+
+                <div class="record-button-grid">
+                    <button onclick="record('2P 성공')">2P 성공</button>
+                    <button onclick="record('2P 실패')">2P 실패</button>
+
+                    <button onclick="record('3P 성공')">3P 성공</button>
+                    <button onclick="record('3P 실패')">3P 실패</button>
+
+                    <button onclick="record('FT 성공')">FT 성공</button>
+                    <button onclick="record('FT 실패')">FT 실패</button>
+
+                    <button onclick="record('리바운드')">리바운드</button>
+                    <button onclick="record('어시스트')">어시스트</button>
+
+                    <button onclick="record('스틸')">스틸</button>
+                    <button onclick="record('블록')">블록</button>
+
+                    <button onclick="record('턴오버')">턴오버</button>
+                    <button onclick="setShotMode('make')">🟢 슛 성공 위치</button>
+
+                    <button onclick="setShotMode('miss')">🔴 슛 실패 위치</button>
+                    <button onclick="clearShots()">🗑 슛맵 초기화</button>
+                </div>
+            </div>
+
         </div>
 
     </div>
@@ -54,37 +105,6 @@
       <div id="events"></div>
     </div>
   </div>
-
-  <div class="card">
-    <h2>기록하기</h2>
-    <div id="scoreboard2" class="card"></div>
-    <select id="team" onchange="renderPlayers2()">
-
-    <option value="A">🔵 A팀</option>
-    <option value="B">🔴 B팀</option>
-</select>
-<br><br>
-
-<input id="newPlayer2" placeholder="선수 이름 입력">
-<button onclick="addPlayer2()">➕ 선수 추가</button>
-
-<br><br>
-    <input id="player" placeholder="선수 이름"><br>
-
-    <button onclick="record('2P 성공')">2P 성공</button>
-    <button onclick="record('2P 실패')">2P 실패</button>
-    <button onclick="record('3P 성공')">3P 성공</button>
-    <button onclick="record('3P 실패')">3P 실패</button>
-    <button onclick="record('FT 성공')">FT 성공</button>
-    <button onclick="record('FT 실패')">FT 실패</button>
-    <button onclick="record('리바운드')">리바운드</button>
-    <button onclick="record('어시스트')">어시스트</button>
-    <button onclick="record('스틸')">스틸</button>
-    <button onclick="record('블록')">블록</button>
-    <button onclick="record('턴오버')">턴오버</button>
-    <button onclick="setShotMode('make')">🟢 슛 성공 위치</button>
-<button onclick="setShotMode('miss')">🔴 슛 실패 위치</button>
-<button onclick="clearShots()">🗑 슛맵 초기화</button>
 
     <h2>선수 분석</h2>
     <div class="stats" id="stats"></div>
