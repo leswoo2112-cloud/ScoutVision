@@ -161,6 +161,8 @@ if(typeof updateBestLineup === "function") updateBestLineup();
 if(typeof updateCoachAI==="function") updateCoachAI();
 if(typeof updateMVPCard==="function")
     updateMVPCard();
+    if(typeof updateSeasonStats==="function")
+updateSeasonStats();
 }
 
 function makeAI(){
@@ -218,6 +220,8 @@ window.onload = function(){
   updatePlayerType();
   updateHotPlayer();
   if(typeof initCourt === "function") initCourt();
+  if(typeof updateSeasonStats==="function")
+updateSeasonStats();
 };
 document.getElementById("undoBtn").onclick = function () {
 
@@ -238,6 +242,8 @@ document.getElementById("undoBtn").onclick = function () {
         updatePlayerType();
         updateHotPlayer();
         if(typeof updateWinPrediction==="function") updateWinPrediction();
+        if(typeof updateSeasonStats==="function")
+updateSeasonStats();
         return;
     }
 
