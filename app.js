@@ -163,6 +163,8 @@ if(typeof updateMVPCard==="function")
     updateMVPCard();
     if(typeof updateSeasonStats==="function")
 updateSeasonStats();
+if(typeof updateMomentum==="function")
+updateMomentum();
 }
 
 function makeAI(){
@@ -244,6 +246,8 @@ document.getElementById("undoBtn").onclick = function () {
         if(typeof updateWinPrediction==="function") updateWinPrediction();
         if(typeof updateSeasonStats==="function")
 updateSeasonStats();
+if(typeof updateMomentum==="function")
+updateMomentum();
         return;
     }
 
