@@ -168,6 +168,8 @@ updateMomentum();
 if (typeof updateLeagueStandings === "function")
     updateLeagueStandings();
     if (typeof updateTacticalAI === "function") updateTacticalAI();
+    if (typeof updateZoneAnalysis === "function")
+    updateZoneAnalysis();
 }
 
 function makeAI(){
@@ -230,6 +232,8 @@ updateSeasonStats();
 if (typeof updateLeagueStandings === "function")
     updateLeagueStandings();
     if (typeof updateTacticalAI === "function") updateTacticalAI();
+    if (typeof updateZoneAnalysis === "function")
+    updateZoneAnalysis();
 };
 document.getElementById("undoBtn").onclick = function () {
 
@@ -257,6 +261,8 @@ updateMomentum();
 if (typeof updateLeagueStandings === "function")
     updateLeagueStandings();
     if (typeof updateTacticalAI === "function") updateTacticalAI();
+    if (typeof updateZoneAnalysis === "function")
+    updateZoneAnalysis();
         return;
     }
 
