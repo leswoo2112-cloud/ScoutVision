@@ -18,20 +18,36 @@
   </div>
 
   <div class="main">
-    <div class="card">
-      <h2>경기 영상</h2>
-      <input type="file" accept="video/*" onchange="loadVideo(event)">
-      <video id="video" controls></video>
+    <div class="card game-view-card">
+    <h2>🏀 경기 영상 · 점수판</h2>
 
-<div class="videoControls">
-  <button onclick="back5()">⏪ 5초</button>
-  <button onclick="playPause()">▶️/⏸️</button>
-  <button onclick="forward5()">5초 ⏩</button>
-  <button onclick="slow()">0.5x</button>
-  <button onclick="normal()">1x</button>
-  <button onclick="fast()">2x</button>
-</div>
+    <div class="game-view-grid">
+
+        <div class="video-area">
+            <input
+                type="file"
+                accept="video/*"
+                onchange="loadVideo(event)"
+            >
+
+            <video id="video" controls></video>
+
+            <div class="videoControls">
+                <button onclick="back5()">⏪ 5초</button>
+                <button onclick="playPause()">▶️ / ⏸️</button>
+                <button onclick="forward5()">5초 ⏩</button>
+                <button onclick="slow()">0.5×</button>
+                <button onclick="normal()">1×</button>
+                <button onclick="fast()">2×</button>
+            </div>
+        </div>
+
+        <div class="score-area">
+            <div id="scoreboard2"></div>
+        </div>
+
     </div>
+</div>
 
     <div class="card timeline">
       <h2>기록 타임라인</h2>
@@ -42,7 +58,6 @@
   <div class="card">
     <h2>기록하기</h2>
     <div id="scoreboard2" class="card"></div>
-<div id="players2" class="card"></div>
     <select id="team" onchange="renderPlayers2()">
 
     <option value="A">🔵 A팀</option>
