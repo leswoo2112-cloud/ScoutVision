@@ -1,87 +1,697 @@
-body{
-    margin:0;
-    background:#060b12;
-    color:white;
-    font-family:Arial, sans-serif;
+/* ========================================
+   ScoutVision 4.0 Premium NBA UI
+======================================== */
+
+* {
+    box-sizing: border-box;
 }
 
-.wrap{
-    display:grid;
-    grid-template-columns:220px 1.4fr 1fr;
-    gap:18px;
-    padding:20px;
+html {
+    scroll-behavior: smooth;
 }
 
-.side,
-.card{
-    background:#0d131d;
-    border:1px solid #263244;
-    border-radius:16px;
-    padding:18px;
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at 85% 10%,
+            rgba(37, 99, 235, 0.16),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 10% 90%,
+            rgba(249, 115, 22, 0.1),
+            transparent 30%
+        ),
+        #070b14;
+
+    color: #f8fafc;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Pretendard",
+        "Noto Sans KR",
+        Arial,
+        sans-serif;
+
+    line-height: 1.55;
 }
 
-.logo{
-    font-size:26px;
-    font-weight:bold;
-    color:#ff8a00;
+
+/* ========================================
+   전체 레이아웃
+======================================== */
+
+.container {
+    display: grid;
+    grid-template-columns: 240px 360px minmax(640px, 1fr);
+    gap: 18px;
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
 }
 
-.main{
-    display:grid;
-    gap:18px;
+.sidebar,
+.video-panel,
+.main-panel {
+    background: rgba(12, 18, 31, 0.92);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 22px;
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
-button,
+.sidebar,
+.video-panel {
+    position: sticky;
+    top: 20px;
+    height: calc(100vh - 40px);
+    overflow-y: auto;
+}
+
+.main-panel {
+    padding: 26px;
+    overflow: hidden;
+}
+
+
+/* 기존 클래스 이름이 다른 경우에도 적용 */
+
+.left,
+.middle,
+.right {
+    background: rgba(12, 18, 31, 0.92);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 22px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    padding: 22px;
+}
+
+
+/* ========================================
+   사이드바
+======================================== */
+
+.sidebar {
+    padding: 26px 20px;
+}
+
+.sidebar h1,
+.logo {
+    margin: 0 0 8px;
+    color: #f97316;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.sidebar h1::before,
+.logo::before {
+    content: "🏀";
+    display: block;
+    margin-bottom: 8px;
+    font-size: 32px;
+}
+
+.sidebar a,
+.sidebar button,
+.menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 46px;
+    margin: 7px 0;
+    padding: 11px 14px;
+
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 12px;
+
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: left;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.sidebar a:hover,
+.sidebar button:hover,
+.menu-item:hover {
+    background: rgba(37, 99, 235, 0.14);
+    border-color: rgba(96, 165, 250, 0.32);
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+
+/* ========================================
+   제목
+======================================== */
+
+h1,
+h2,
+h3 {
+    letter-spacing: -0.5px;
+}
+
+h2 {
+    position: relative;
+    margin: 34px 0 15px;
+    padding-left: 15px;
+    color: #f8fafc;
+    font-size: 25px;
+    font-weight: 850;
+}
+
+h2::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 0;
+    width: 4px;
+    border-radius: 999px;
+    background: linear-gradient(
+        180deg,
+        #f97316,
+        #2563eb
+    );
+}
+
+h3 {
+    margin: 5px 0 18px;
+    color: #ffffff;
+    font-size: 19px;
+    font-weight: 800;
+}
+
+
+/* ========================================
+   카드
+======================================== */
+
+.card {
+    position: relative;
+    margin: 12px 0;
+    padding: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18, 27, 45, 0.96),
+            rgba(11, 17, 29, 0.96)
+        );
+
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 18px;
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(96, 165, 250, 0.36);
+    box-shadow:
+        0 17px 38px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(37, 99, 235, 0.06);
+}
+
+.card hr {
+    height: 1px;
+    margin: 18px 0;
+    border: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(249, 115, 22, 0.65),
+        rgba(37, 99, 235, 0.5),
+        transparent
+    );
+}
+
+
+/* ========================================
+   입력창
+======================================== */
+
 input,
-select{
-    background:#151d2b;
-    color:white;
-    border:1px solid #334155;
-    border-radius:10px;
-    padding:10px;
+select,
+textarea {
+    min-height: 43px;
+    padding: 10px 13px;
+
+    background: #0b1220;
+    border: 1px solid #273449;
+    border-radius: 11px;
+
+    color: #ffffff;
+    font: inherit;
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
 }
 
-button{
-    cursor:pointer;
+input::placeholder,
+textarea::placeholder {
+    color: #64748b;
 }
 
-button:hover{
-    background:#1e293b;
+input:focus,
+select:focus,
+textarea:focus {
+    background: #0d1626;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
-video{
-    width:100%;
-    border-radius:14px;
-    background:#000;
+
+/* ========================================
+   기본 버튼
+======================================== */
+
+button {
+    min-height: 42px;
+    padding: 10px 15px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #1d4ed8,
+            #1e40af
+        );
+
+    border: 1px solid rgba(96, 165, 250, 0.4);
+    border-radius: 11px;
+
+    color: #ffffff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 16px rgba(30, 64, 175, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+
+    transition:
+        transform 0.15s ease,
+        filter 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
-.timeline div{
-    padding:8px;
-    border-bottom:1px solid #263244;
-    cursor:pointer;
+button:hover {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+    box-shadow:
+        0 10px 22px rgba(30, 64, 175, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
-.stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
+button:active {
+    transform: translateY(1px) scale(0.98);
 }
 
-.stat{
-    background:#111827;
-    border-radius:12px;
-    padding:14px;
-    text-align:center;
+button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
 }
 
-.good{
-    color:#22c55e;
+
+/* 기록 버튼 영역 */
+
+.record-buttons,
+.controls,
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
 }
 
-.bad{
-    color:#ef4444;
+
+/* 득점 성공 버튼 */
+
+button[onclick*="2P 성공"],
+button[onclick*="3P 성공"],
+button[onclick*="FT 성공"] {
+    background: linear-gradient(
+        180deg,
+        #16a34a,
+        #15803d
+    );
+    border-color: rgba(74, 222, 128, 0.45);
 }
 
-.orange{
-    color:#ff8a00;
+
+/* 슛 실패 버튼 */
+
+button[onclick*="2P 실패"],
+button[onclick*="3P 실패"],
+button[onclick*="FT 실패"] {
+    background: linear-gradient(
+        180deg,
+        #dc2626,
+        #991b1b
+    );
+    border-color: rgba(248, 113, 113, 0.45);
+}
+
+
+/* 초기화 계열 */
+
+button[onclick*="clear"],
+button[onclick*="reset"] {
+    background: linear-gradient(
+        180deg,
+        #475569,
+        #334155
+    );
+    border-color: rgba(148, 163, 184, 0.35);
+}
+
+
+/* ========================================
+   점수판
+======================================== */
+
+#scoreboard,
+.scoreboard {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 18px;
+    padding: 26px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(10, 20, 40, 0.98),
+            rgba(15, 23, 42, 0.98)
+        );
+
+    border: 1px solid rgba(96, 165, 250, 0.23);
+    border-radius: 18px;
+}
+
+#scoreA,
+#aScore,
+#teamAScore,
+#scoreB,
+#bScore,
+#teamBScore {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 950;
+    line-height: 1;
+}
+
+#scoreA,
+#aScore,
+#teamAScore {
+    color: #60a5fa;
+    text-shadow: 0 0 25px rgba(59, 130, 246, 0.35);
+}
+
+#scoreB,
+#bScore,
+#teamBScore {
+    color: #f87171;
+    text-shadow: 0 0 25px rgba(239, 68, 68, 0.35);
+}
+
+
+/* ========================================
+   비디오
+======================================== */
+
+video {
+    display: block;
+    width: 100%;
+    max-height: 440px;
+
+    background: #000000;
+    border: 1px solid #263246;
+    border-radius: 15px;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+}
+
+input[type="file"] {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+
+/* ========================================
+   캔버스 / 그래프 / 코트
+======================================== */
+
+canvas {
+    display: block;
+    max-width: 100%;
+    margin: 12px auto;
+
+    background: #101827;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 15px;
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.27),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+#court {
+    border: 3px solid rgba(249, 115, 22, 0.65);
+    box-shadow:
+        0 14px 35px rgba(0, 0, 0, 0.3),
+        0 0 24px rgba(249, 115, 22, 0.08);
+}
+
+
+/* ========================================
+   표
+======================================== */
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+
+    background: #0d1524;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 14px;
+}
+
+th {
+    padding: 13px 12px;
+    background: #172135;
+    color: #f8fafc;
+    font-size: 13px;
+    font-weight: 850;
+    white-space: nowrap;
+}
+
+td {
+    padding: 13px 12px;
+    border-top: 1px solid rgba(148, 163, 184, 0.12);
+    color: #dbeafe;
+    text-align: center;
+    white-space: nowrap;
+}
+
+tbody tr {
+    transition: background 0.18s ease;
+}
+
+tbody tr:hover {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+
+/* ========================================
+   분석 결과 강조
+======================================== */
+
+#gameGrade {
+    overflow: hidden;
+}
+
+#gameGrade > div:first-of-type {
+    color: #fbbf24;
+    text-shadow: 0 0 24px rgba(251, 191, 36, 0.22);
+}
+
+#tacticalAI,
+#coachAI,
+#winPrediction,
+#zoneAnalysis,
+#leagueStandings,
+#gameGrade {
+    border-left: 3px solid rgba(249, 115, 22, 0.78);
+}
+
+
+/* Hot Zone */
+
+#zoneAnalysis div[style*="#14532d"] {
+    border: 1px solid rgba(74, 222, 128, 0.38);
+    box-shadow: 0 8px 24px rgba(22, 163, 74, 0.12);
+}
+
+#zoneAnalysis div[style*="#7f1d1d"] {
+    border: 1px solid rgba(248, 113, 113, 0.38);
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.12);
+}
+
+
+/* ========================================
+   스크롤바
+======================================== */
+
+::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: #080d17;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border: 2px solid #080d17;
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+
+
+/* ========================================
+   모바일 / 아이패드
+======================================== */
+
+@media (max-width: 1180px) {
+    .container {
+        grid-template-columns: 210px 320px minmax(560px, 1fr);
+        padding: 14px;
+        gap: 13px;
+    }
+
+    .main-panel,
+    .left,
+    .middle,
+    .right {
+        padding: 18px;
+    }
+}
+
+@media (max-width: 900px) {
+    .container {
+        display: block;
+        padding: 10px;
+    }
+
+    .sidebar,
+    .video-panel,
+    .main-panel,
+    .left,
+    .middle,
+    .right {
+        position: static;
+        width: 100%;
+        height: auto;
+        margin-bottom: 12px;
+        border-radius: 17px;
+    }
+
+    .sidebar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        padding: 14px;
+    }
+
+    .sidebar h1,
+    .sidebar .logo {
+        width: 100%;
+    }
+
+    .sidebar a,
+    .sidebar button,
+    .menu-item {
+        width: auto;
+        min-height: 40px;
+        margin: 0;
+        padding: 9px 12px;
+    }
+
+    .card {
+        padding: 17px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    button {
+        min-height: 44px;
+    }
+}
+
+@media (max-width: 560px) {
+    body {
+        font-size: 14px;
+    }
+
+    .main-panel,
+    .left,
+    .middle,
+    .right {
+        padding: 13px;
+    }
+
+    .card {
+        padding: 14px;
+        border-radius: 14px;
+    }
+
+    h2 {
+        margin-top: 26px;
+        font-size: 20px;
+    }
+
+    input,
+    select,
+    button {
+        width: 100%;
+    }
+
+    .record-buttons button,
+    .controls button,
+    .button-group button {
+        width: calc(50% - 4px);
+    }
+
+    table {
+        min-width: 690px;
+    }
 }
