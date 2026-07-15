@@ -233,6 +233,8 @@ window.onload = function(){
 updateSeasonStats();
 if (typeof updateLeagueStandings === "function")
     updateLeagueStandings();
+    if(typeof updateGameGrade==="function")
+    updateGameGrade();
     if (typeof updateTacticalAI === "function") updateTacticalAI();
     if (typeof updateZoneAnalysis === "function")
     updateZoneAnalysis();
@@ -262,6 +264,8 @@ if(typeof updateMomentum==="function")
 updateMomentum();
 if (typeof updateLeagueStandings === "function")
     updateLeagueStandings();
+    if(typeof updateGameGrade==="function")
+    updateGameGrade();
     if (typeof updateTacticalAI === "function") updateTacticalAI();
     if (typeof updateZoneAnalysis === "function")
     updateZoneAnalysis();
