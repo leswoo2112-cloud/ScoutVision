@@ -167,6 +167,7 @@ if(typeof updateMomentum==="function")
 updateMomentum();
 if (typeof updateLeagueStandings === "function")
     updateLeagueStandings();
+    if (typeof updateTacticalAI === "function") updateTacticalAI();
 }
 
 function makeAI(){
@@ -228,6 +229,7 @@ window.onload = function(){
 updateSeasonStats();
 if (typeof updateLeagueStandings === "function")
     updateLeagueStandings();
+    if (typeof updateTacticalAI === "function") updateTacticalAI();
 };
 document.getElementById("undoBtn").onclick = function () {
 
@@ -254,6 +256,7 @@ if(typeof updateMomentum==="function")
 updateMomentum();
 if (typeof updateLeagueStandings === "function")
     updateLeagueStandings();
+    if (typeof updateTacticalAI === "function") updateTacticalAI();
         return;
     }
 
