@@ -165,6 +165,8 @@ if(typeof updateMVPCard==="function")
 updateSeasonStats();
 if(typeof updateMomentum==="function")
 updateMomentum();
+if (typeof updateLeagueStandings === "function")
+    updateLeagueStandings();
 }
 
 function makeAI(){
@@ -224,6 +226,8 @@ window.onload = function(){
   if(typeof initCourt === "function") initCourt();
   if(typeof updateSeasonStats==="function")
 updateSeasonStats();
+if (typeof updateLeagueStandings === "function")
+    updateLeagueStandings();
 };
 document.getElementById("undoBtn").onclick = function () {
 
@@ -248,6 +252,8 @@ document.getElementById("undoBtn").onclick = function () {
 updateSeasonStats();
 if(typeof updateMomentum==="function")
 updateMomentum();
+if (typeof updateLeagueStandings === "function")
+    updateLeagueStandings();
         return;
     }
 
