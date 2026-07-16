@@ -1600,3 +1600,88 @@ body {
     font-size: 12px;
     font-weight: 700;
 }
+/* ========================================
+   아래 분석 결과 레이아웃 복구
+======================================== */
+
+/* 메인 영역은 기본적으로 한 줄씩 세로 배치 */
+.main {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+/* 영상 통합 카드 내부만 가로 배치 유지 */
+.game-view-grid {
+    display: grid !important;
+}
+
+/* 분석 제목 */
+.main > h2 {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+
+    margin: 34px 0 14px !important;
+    padding-left: 18px !important;
+
+    clear: both !important;
+}
+
+/* 분석 결과 카드 전체 폭 */
+.main > .card,
+.main > div.card {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+
+    margin: 0 0 22px !important;
+    padding: 20px !important;
+
+    clear: both !important;
+}
+
+/* 각 분석 결과 ID도 전체 폭 강제 */
+#hotPlayer,
+#mvpCard,
+#bestLineup,
+#seasonStats,
+#winPrediction,
+#growthText,
+#coachAI,
+#leaderboard,
+#tacticalAI,
+#leagueStandings,
+#report2,
+#teamCompare,
+#ovr,
+#playerType,
+#momentum,
+#ai,
+#gameGrade,
+#zoneAnalysis {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* 그래프도 전체 폭 */
+.main > canvas,
+#growthChart,
+#scoreChart {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin: 12px 0 28px !important;
+}
+
+/* 왼쪽으로 떠 있는 요소 방지 */
+.main > * {
+    float: none !important;
+}
