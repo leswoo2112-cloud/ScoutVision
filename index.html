@@ -24,6 +24,25 @@
     <div class="game-view-grid">
 
         <div class="video-area">
+          <div class="youtube-load-row">
+    <input
+        id="youtubeUrl"
+        type="text"
+        placeholder="유튜브 영상 주소 붙여넣기"
+    >
+
+    <button type="button" onclick="loadYouTubeVideo()">
+        ▶ 유튜브 불러오기
+    </button>
+</div>
+
+<div id="youtubePlayerWrap" style="display:none;">
+    <div id="youtubePlayer"></div>
+</div>
+
+<div class="video-source-label">
+    또는 기기 영상 업로드
+</div>
             <input
                 type="file"
                 accept="video/*"
@@ -274,5 +293,7 @@ padding:10px;">
 <script src="tacticalAI.js"></script>
 <script src="zoneAnalysis.js"></script>
 <script src="gameGrade.js"></script>
+<script src="youtubePlayer.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
