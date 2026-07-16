@@ -1373,3 +1373,38 @@ body {
         min-height: 380px;
     }
 }
+/* 점수판 높이 줄이고 기록 영역 확보 */
+
+.score-area {
+    padding: 10px;
+}
+
+#scoreboard2 {
+    min-height: 170px;
+    padding: 14px;
+}
+
+#scoreboard2 h2,
+#scoreboard2 h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+#scoreboard2 button {
+    min-height: 38px;
+    padding: 8px 12px;
+}
+
+.record-side {
+    gap: 10px;
+}
+
+.record-area {
+    max-height: 560px;
+    overflow-y: auto;
+}
+
+.video-area video {
+    height: 390px;
+    min-height: 390px;
+}
