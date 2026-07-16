@@ -43,8 +43,9 @@ const playerInput = document.getElementById("player");
 if (playerInput) {
     playerInput.value = name;
 }
-    input.value = "";
-    renderPlayers2();
+
+input.value = "";
+renderPlayers2();
 }
 
 
@@ -177,26 +178,3 @@ function renderTeamPlayerButtons2(team) {
 window.addEventListener("load", function () {
     renderPlayers2();
 });
-
-
-// 기존 record 함수 보관
-const oldRecord2 = window.record;
-
-
-// 기록 버튼을 누르면 선택 선수 이름 자동 입력
-window.record = function (type) {
-    const playerInput = document.getElementById("player");
-
-    if (!selectedPlayer2) {
-        alert("먼저 A팀 또는 B팀 선수를 선택해줘용!");
-        return;
-    }
-
-    if (playerInput) {
-        playerInput.value = selectedPlayer2;
-    }
-
-    if (typeof oldRecord2 === "function") {
-        oldRecord2(type);
-    }
-};
