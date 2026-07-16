@@ -1408,3 +1408,61 @@ body {
     height: 390px;
     min-height: 390px;
 }
+/* 오른쪽 점수판 압축 + 기록하기 위로 올리기 */
+
+.score-area {
+    padding: 8px;
+}
+
+#scoreboard2 {
+    min-height: 145px !important;
+    padding: 12px !important;
+}
+
+#scoreboard2 h2,
+#scoreboard2 h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+}
+
+#scoreboard2 button {
+    min-height: 34px;
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+.record-side {
+    gap: 8px;
+}
+
+.record-area {
+    padding: 12px;
+    max-height: 590px;
+    overflow-y: auto;
+}
+
+.record-area h3 {
+    margin: 0 0 10px;
+}
+
+#players2 {
+    padding: 8px;
+    margin-bottom: 8px;
+}
+
+.record-area input,
+.record-area select {
+    min-height: 40px;
+    margin-bottom: 7px;
+}
+
+.record-button-grid {
+    gap: 6px;
+    margin-top: 7px;
+}
+
+.record-button-grid button {
+    min-height: 40px;
+    padding: 7px 5px;
+    font-size: 13px;
+}
