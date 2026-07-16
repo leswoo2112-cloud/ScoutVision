@@ -234,9 +234,13 @@ function record(type) {
     }
 
     const currentTime =
-        video && Number.isFinite(video.currentTime)
-            ? video.currentTime
-            : 0;
+    typeof getAnalysisTime === "function"
+        ? getAnalysisTime()
+        : (
+            video && Number.isFinite(video.currentTime)
+                ? video.currentTime
+                : 0
+        );
 
     records.push({
         team: team,
@@ -353,12 +357,19 @@ function drawTimeline() {
             " | " +
             teamIcon +
             " " +
-            recordItem.name +
-            " | " +
-            recordItem.type;
+            item.onclick = function () {
+    if (typeof seekAnalysisTime === "function") {
+        seekAnalysisTime(recordItem.time);
+    } else if (video) {
+        video.currentTime = recordItem.time;
+    }
 
-        item.onclick = function () {
-            if (!video) return;
+    if (typeof playAnalysisVideo === "function") {
+        playAnalysisVideo();
+    } else if (video) {
+        video.play().catch(function () {});
+    }
+};
 
             video.currentTime = recordItem.time;
             video.play().catch(function () {});
