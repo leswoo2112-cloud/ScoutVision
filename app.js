@@ -32,10 +32,14 @@ function makePlayer(name){
 }
 
 function record(type){
-  const name = document.getElementById("player").value.trim();
-  const teamBox = document.getElementById("team");
-  const team = teamBox ? teamBox.value : "A";
+    const playerInput = document.getElementById("player");
+    const name = playerInput ? playerInput.value.trim() : "";
 
+    const team =
+        typeof selectedPlayerTeam2 !== "undefined" &&
+        selectedPlayerTeam2
+            ? selectedPlayerTeam2
+            : "A";
   if(!name){
     alert("선수 이름 입력!");
     return;
