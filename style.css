@@ -1518,3 +1518,85 @@ body {
     padding: 4px !important;
     font-size: 12px !important;
 }
+/* A팀/B팀 선수 영역 분리 */
+
+.team-player-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.team-player-box {
+    min-width: 0;
+    padding: 9px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 12px;
+    background: rgba(8, 15, 29, 0.72);
+}
+
+.team-player-box h3 {
+    margin: 0 0 7px;
+    font-size: 14px;
+}
+
+.team-a-box {
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+.team-b-box {
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+.team-player-add {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+}
+
+.team-player-add input,
+.team-player-add button {
+    width: 100%;
+    min-height: 34px !important;
+    height: 34px;
+    margin: 0 !important;
+    padding: 5px !important;
+    font-size: 11px !important;
+}
+
+.team-a-box .team-player-add button,
+.team-a-player-btn {
+    background: linear-gradient(180deg, #2563eb, #1d4ed8);
+}
+
+.team-b-box .team-player-add button,
+.team-b-player-btn {
+    background: linear-gradient(180deg, #dc2626, #991b1b);
+}
+
+.player-button-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 7px;
+}
+
+.player-button-list button {
+    min-height: 32px !important;
+    padding: 5px 8px !important;
+    font-size: 11px !important;
+}
+
+.selected-player-btn {
+    outline: 2px solid #fbbf24;
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.35);
+}
+
+.selected-player-info {
+    margin-top: 8px;
+    padding: 7px;
+    text-align: center;
+    border-radius: 9px;
+    background: rgba(15, 23, 42, 0.8);
+    font-size: 12px;
+    font-weight: 700;
+}
