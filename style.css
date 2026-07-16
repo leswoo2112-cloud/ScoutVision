@@ -1685,3 +1685,127 @@ body {
 .main > * {
     float: none !important;
 }
+/* ========================================
+   선수 랭킹 정리
+======================================== */
+
+#ranking {
+    width: 100%;
+    margin: 0 0 28px;
+}
+
+.ranking-panel {
+    width: 100%;
+    padding: 22px;
+    box-sizing: border-box;
+
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(15, 23, 42, 0.96),
+            rgba(17, 30, 55, 0.92)
+        );
+}
+
+.ranking-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.ranking-title span {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.ranking-title small {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.ranking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ranking-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 70px;
+    align-items: center;
+    gap: 12px;
+
+    padding: 15px 16px;
+
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 14px;
+
+    background: rgba(15, 23, 42, 0.7);
+}
+
+.ranking-place {
+    font-size: 22px;
+    font-weight: 800;
+    text-align: center;
+}
+
+.ranking-player {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.ranking-player strong {
+    font-size: 19px;
+}
+
+.ranking-player span {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.ranking-score {
+    padding: 8px 10px;
+
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f97316, #f59e0b);
+
+    color: white;
+    font-size: 19px;
+    font-weight: 900;
+    text-align: center;
+}
+
+.ranking-empty {
+    padding: 20px;
+
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 14px;
+
+    color: #94a3b8;
+}
+
+/* 태블릿 화면 */
+@media (max-width: 800px) {
+    .ranking-row {
+        grid-template-columns: 48px 1fr 58px;
+        padding: 13px 10px;
+    }
+
+    .ranking-title span {
+        font-size: 20px;
+    }
+
+    .ranking-player strong {
+        font-size: 17px;
+    }
+}
