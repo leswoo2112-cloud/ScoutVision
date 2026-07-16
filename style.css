@@ -1925,3 +1925,59 @@ body {
         font-size: 21px !important;
     }
 }
+/* ========================================
+   YouTube 영상 분석
+======================================== */
+
+.youtube-load-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.youtube-load-row input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.youtube-load-row button {
+    min-width: 150px;
+}
+
+.video-source-label {
+    margin: 10px 0;
+    color: #94a3b8;
+    font-size: 13px;
+    text-align: center;
+}
+
+#youtubePlayerWrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    margin-bottom: 12px;
+
+    background: #000;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    border-radius: 16px;
+}
+
+#youtubePlayerWrap iframe,
+#youtubePlayer {
+    width: 100% !important;
+    height: 100% !important;
+    border: 0;
+}
+
+@media (max-width: 700px) {
+    .youtube-load-row {
+        grid-template-columns: 1fr;
+    }
+
+    .youtube-load-row button {
+        width: 100%;
+    }
+}
