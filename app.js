@@ -1,75 +1,173 @@
 /* =========================================================
-   ScoutVision 메인 시스템
-   기록 · 선수 통계 · 타임라인 · 점수 흐름 · 실행 연결
+   ScoutVision 4.0
+   메인 기록·분석 시스템
+   로컬 영상 + YouTube 영상 지원
 ========================================================= */
-
-let records = [];
-let players = {};
-
-let scoreHistoryA = [0];
-let scoreHistoryB = [0];
 
 
 /* =========================================================
-   기본 HTML 요소
+   기본 데이터
 ========================================================= */
 
-const video = document.getElementById("video");
-const events = document.getElementById("events");
-const stats = document.getElementById("stats");
-const ai = document.getElementById("ai");
+var records = [];
+var players = {};
+
+var scoreHistoryA = [0];
+var scoreHistoryB = [0];
+
+window.records = records;
+window.players = players;
+window.scoreHistoryA = scoreHistoryA;
+window.scoreHistoryB = scoreHistoryB;
 
 
 /* =========================================================
-   안전하게 다른 기능 실행
+   화면 요소
+========================================================= */
+
+var video = document.getElementById("video");
+var events = document.getElementById("events");
+var stats = document.getElementById("stats");
+var ai = document.getElementById("ai");
+
+
+/* =========================================================
+   다른 JS 기능 안전 실행
 ========================================================= */
 
 function safeCall(functionName) {
-    const fn = window[functionName];
-
-    if (typeof fn === "function") {
-        try {
-            fn();
-        } catch (error) {
-            console.error(functionName + " 실행 오류:", error);
+    try {
+        if (typeof window[functionName] === "function") {
+            window[functionName]();
         }
+    } catch (error) {
+        console.warn(
+            functionName + " 실행 오류:",
+            error
+        );
     }
 }
 
 
 /* =========================================================
-   영상 불러오기
+   영상 파일 불러오기
 ========================================================= */
 
 function loadVideo(event) {
-    const file = event.target.files[0];
+    var file =
+        event &&
+        event.target &&
+        event.target.files
+            ? event.target.files[0]
+            : null;
 
-    if (!file || !video) return;
+    if (!file) return;
 
-    if (video.src) {
-        URL.revokeObjectURL(video.src);
+    video = document.getElementById("video");
+
+    if (!video) {
+        alert("영상 플레이어를 찾을 수 없습니다.");
+        return;
     }
 
-    video.src = URL.createObjectURL(file);
+    if (
+        typeof window.useLocalVideoMode ===
+        "function"
+    ) {
+        window.useLocalVideoMode();
+    }
+
+    if (
+        video.dataset.objectUrl
+    ) {
+        URL.revokeObjectURL(
+            video.dataset.objectUrl
+        );
+    }
+
+    var objectUrl =
+        URL.createObjectURL(file);
+
+    video.dataset.objectUrl =
+        objectUrl;
+
+    video.src = objectUrl;
     video.load();
+}
+
+window.loadVideo = loadVideo;
+
+
+/* =========================================================
+   시간 표시
+========================================================= */
+
+function timeText(seconds) {
+    var total =
+        Math.max(
+            0,
+            Math.floor(Number(seconds) || 0)
+        );
+
+    var minutes =
+        Math.floor(total / 60);
+
+    var remain =
+        total % 60;
+
+    return (
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(remain).padStart(2, "0")
+    );
 }
 
 
 /* =========================================================
-   영상 시간 표시
+   현재 영상 시간
 ========================================================= */
 
-function timeText(time) {
-    const safeTime = Number(time) || 0;
+function getCurrentAnalysisTime() {
+    if (
+        typeof window.getAnalysisTime ===
+        "function"
+    ) {
+        try {
+            var youtubeTime =
+                Number(
+                    window.getAnalysisTime()
+                );
 
-    const minute = Math.floor(safeTime / 60);
-    const second = Math.floor(safeTime % 60);
+            if (
+                Number.isFinite(
+                    youtubeTime
+                )
+            ) {
+                return youtubeTime;
+            }
+        } catch (error) {
+            console.warn(
+                "영상 시간 확인 오류:",
+                error
+            );
+        }
+    }
 
-    return (
-        String(minute).padStart(2, "0") +
-        ":" +
-        String(second).padStart(2, "0")
-    );
+    video =
+        document.getElementById("video");
+
+    if (
+        video &&
+        Number.isFinite(
+            Number(video.currentTime)
+        )
+    ) {
+        return Number(
+            video.currentTime
+        );
+    }
+
+    return 0;
 }
 
 
@@ -78,11 +176,13 @@ function timeText(time) {
 ========================================================= */
 
 function makePlayer(name) {
-    if (!name) return null;
+    var cleanName =
+        String(name || "").trim();
 
-    if (!players[name]) {
-        players[name] = {
-            name: name,
+    if (!cleanName) return null;
+
+    if (!players[cleanName]) {
+        players[cleanName] = {
             team: "A",
 
             pts: 0,
@@ -104,188 +204,262 @@ function makePlayer(name) {
         };
     }
 
-    return players[name];
+    return players[cleanName];
 }
+
+window.makePlayer = makePlayer;
 
 
 /* =========================================================
-   현재 선택 선수와 팀 가져오기
+   선택된 선수 확인
 ========================================================= */
 
 function getSelectedPlayerInfo() {
-    const playerInput = document.getElementById("player");
+    var playerInput =
+        document.getElementById("player");
 
-    let name = "";
+    var name = "";
 
     if (
-        typeof selectedPlayer2 !== "undefined" &&
-        selectedPlayer2
+        typeof window.selectedPlayer2 ===
+            "string" &&
+        window.selectedPlayer2.trim()
     ) {
-        name = selectedPlayer2;
+        name =
+            window.selectedPlayer2.trim();
+    } else if (
+        typeof selectedPlayer2 !==
+            "undefined" &&
+        String(selectedPlayer2).trim()
+    ) {
+        name =
+            String(selectedPlayer2).trim();
     } else if (playerInput) {
-        name = playerInput.value.trim();
+        name =
+            playerInput.value.trim();
     }
 
-    let team = "A";
+    var team = "A";
 
     if (
-        typeof selectedPlayerTeam2 !== "undefined" &&
+        typeof window.selectedPlayerTeam2 ===
+            "string" &&
+        window.selectedPlayerTeam2
+    ) {
+        team =
+            window.selectedPlayerTeam2;
+    } else if (
+        typeof selectedPlayerTeam2 !==
+            "undefined" &&
         selectedPlayerTeam2
     ) {
-        team = selectedPlayerTeam2;
+        team =
+            selectedPlayerTeam2;
     } else if (
         name &&
         players[name] &&
         players[name].team
     ) {
-        team = players[name].team;
+        team =
+            players[name].team;
+    }
+
+    if (
+        team !== "A" &&
+        team !== "B"
+    ) {
+        team = "A";
     }
 
     return {
         name: name,
         team: team,
-        playerInput: playerInput
+        input: playerInput
     };
 }
 
 
 /* =========================================================
-   기록하기
+   기록 입력
 ========================================================= */
 
 function record(type) {
-    const selected = getSelectedPlayerInfo();
+    try {
+        var selected =
+            getSelectedPlayerInfo();
 
-    const name = selected.name;
-    const team = selected.team;
-    const playerInput = selected.playerInput;
+        var name =
+            selected.name;
 
-    if (!name) {
-        alert("먼저 A팀 또는 B팀 선수를 선택해주세요!");
-        return;
-    }
+        var team =
+            selected.team;
 
-    const player = makePlayer(name);
-
-    if (!player) {
-        alert("선수 데이터를 만들 수 없습니다.");
-        return;
-    }
-
-    player.team = team;
-
-    switch (type) {
-        case "2P 성공":
-            player.pts += 2;
-            player.fgm += 1;
-            player.fga += 1;
-            break;
-
-        case "2P 실패":
-            player.fga += 1;
-            break;
-
-        case "3P 성공":
-            player.pts += 3;
-            player.fgm += 1;
-            player.fga += 1;
-            player.threeM += 1;
-            player.threeA += 1;
-            break;
-
-        case "3P 실패":
-            player.fga += 1;
-            player.threeA += 1;
-            break;
-
-        case "FT 성공":
-            player.pts += 1;
-            player.ftm += 1;
-            player.fta += 1;
-            break;
-
-        case "FT 실패":
-            player.fta += 1;
-            break;
-
-        case "리바운드":
-            player.reb += 1;
-            break;
-
-        case "어시스트":
-            player.ast += 1;
-            break;
-
-        case "스틸":
-            player.stl += 1;
-            break;
-
-        case "블록":
-            player.blk += 1;
-            break;
-
-        case "턴오버":
-            player.to += 1;
-            break;
-
-        default:
-            console.warn("알 수 없는 기록 종류:", type);
+        if (!name) {
+            alert(
+                "먼저 선수를 추가하고 선택해주세요."
+            );
             return;
-    }
+        }
 
-    const currentTime =
-    typeof getAnalysisTime === "function"
-        ? getAnalysisTime()
-        : (
-            video && Number.isFinite(video.currentTime)
-                ? video.currentTime
-                : 0
+        var player =
+            makePlayer(name);
+
+        if (!player) return;
+
+        player.team = team;
+
+        switch (type) {
+            case "2P 성공":
+                player.pts += 2;
+                player.fgm += 1;
+                player.fga += 1;
+                break;
+
+            case "2P 실패":
+                player.fga += 1;
+                break;
+
+            case "3P 성공":
+                player.pts += 3;
+
+                player.fgm += 1;
+                player.fga += 1;
+
+                player.threeM += 1;
+                player.threeA += 1;
+                break;
+
+            case "3P 실패":
+                player.fga += 1;
+                player.threeA += 1;
+                break;
+
+            case "FT 성공":
+                player.pts += 1;
+                player.ftm += 1;
+                player.fta += 1;
+                break;
+
+            case "FT 실패":
+                player.fta += 1;
+                break;
+
+            case "리바운드":
+                player.reb += 1;
+                break;
+
+            case "어시스트":
+                player.ast += 1;
+                break;
+
+            case "스틸":
+                player.stl += 1;
+                break;
+
+            case "블록":
+                player.blk += 1;
+                break;
+
+            case "턴오버":
+                player.to += 1;
+                break;
+
+            default:
+                console.warn(
+                    "알 수 없는 기록 종류:",
+                    type
+                );
+                return;
+        }
+
+        var currentTime =
+            getCurrentAnalysisTime();
+
+        records.push({
+            team: team,
+            name: name,
+            type: type,
+            time: currentTime
+        });
+
+        updateScoreHistory(
+            team,
+            type
         );
 
-    records.push({
-        team: team,
-        name: name,
-        type: type,
-        time: currentTime
-    });
+        if (selected.input) {
+            selected.input.value =
+                name;
+        }
 
-    updateScoreHistory(team, type);
+        window.records = records;
+        window.players = players;
 
-    if (playerInput) {
-        playerInput.value = name;
+        drawScoreChart();
+        draw();
+    } catch (error) {
+        console.error(
+            "기록 입력 오류:",
+            error
+        );
+
+        alert(
+            "기록 처리 중 오류가 발생했습니다."
+        );
     }
-
-    drawScoreChart();
-    draw();
 }
+
+window.record = record;
 
 
 /* =========================================================
-   팀 점수 흐름 저장
+   점수 흐름 저장
 ========================================================= */
 
 function updateScoreHistory(team, type) {
-    const lastA =
-        scoreHistoryA[scoreHistoryA.length - 1] || 0;
+    var lastA =
+        scoreHistoryA[
+            scoreHistoryA.length - 1
+        ] || 0;
 
-    const lastB =
-        scoreHistoryB[scoreHistoryB.length - 1] || 0;
+    var lastB =
+        scoreHistoryB[
+            scoreHistoryB.length - 1
+        ] || 0;
 
-    let point = 0;
+    var point = 0;
 
-    if (type === "2P 성공") point = 2;
-    if (type === "3P 성공") point = 3;
-    if (type === "FT 성공") point = 1;
+    if (type === "2P 성공") {
+        point = 2;
+    }
+
+    if (type === "3P 성공") {
+        point = 3;
+    }
+
+    if (type === "FT 성공") {
+        point = 1;
+    }
 
     if (point === 0) return;
 
     if (team === "B") {
         scoreHistoryA.push(lastA);
-        scoreHistoryB.push(lastB + point);
+        scoreHistoryB.push(
+            lastB + point
+        );
     } else {
-        scoreHistoryA.push(lastA + point);
+        scoreHistoryA.push(
+            lastA + point
+        );
         scoreHistoryB.push(lastB);
     }
+
+    window.scoreHistoryA =
+        scoreHistoryA;
+
+    window.scoreHistoryB =
+        scoreHistoryB;
 }
 
 
@@ -323,9 +497,10 @@ function draw() {
     safeCall("updateGameGrade");
     safeCall("updateTacticalAI");
     safeCall("updateZoneAnalysis");
-
     safeCall("updateScoreboard2");
 }
+
+window.draw = draw;
 
 
 /* =========================================================
@@ -333,50 +508,88 @@ function draw() {
 ========================================================= */
 
 function drawTimeline() {
+    events =
+        document.getElementById("events");
+
     if (!events) return;
 
     events.innerHTML = "";
 
     if (records.length === 0) {
         events.innerHTML =
-            '<div class="empty-message">아직 기록이 없습니다.</div>';
+            '<div class="empty-message">' +
+            "아직 기록이 없습니다." +
+            "</div>";
 
         return;
     }
 
-    records.forEach(function (recordItem) {
-        const item = document.createElement("div");
+    records.forEach(
+        function (recordItem) {
+            var item =
+                document.createElement(
+                    "div"
+                );
 
-        item.className = "timeline-item";
+            item.className =
+                "timeline-item";
 
-        const teamIcon =
-            recordItem.team === "B" ? "🔴" : "🔵";
+            var teamIcon =
+                recordItem.team === "B"
+                    ? "🔴"
+                    : "🔵";
 
-        item.textContent =
-            timeText(recordItem.time) +
-            " | " +
-            teamIcon +
-            " " +
-            item.onclick = function () {
-    if (typeof seekAnalysisTime === "function") {
-        seekAnalysisTime(recordItem.time);
-    } else if (video) {
-        video.currentTime = recordItem.time;
-    }
+            item.textContent =
+                timeText(
+                    recordItem.time
+                ) +
+                " | " +
+                teamIcon +
+                " " +
+                recordItem.name +
+                " | " +
+                recordItem.type;
 
-    if (typeof playAnalysisVideo === "function") {
-        playAnalysisVideo();
-    } else if (video) {
-        video.play().catch(function () {});
-    }
-};
+            item.onclick =
+                function () {
+                    if (
+                        typeof window
+                            .seekAnalysisTime ===
+                        "function"
+                    ) {
+                        window.seekAnalysisTime(
+                            recordItem.time
+                        );
+                    } else {
+                        video =
+                            document.getElementById(
+                                "video"
+                            );
 
-            video.currentTime = recordItem.time;
-            video.play().catch(function () {});
-        };
+                        if (video) {
+                            video.currentTime =
+                                recordItem.time;
+                        }
+                    }
 
-        events.appendChild(item);
-    });
+                    if (
+                        typeof window
+                            .playAnalysisVideo ===
+                        "function"
+                    ) {
+                        window.playAnalysisVideo();
+                    } else if (video) {
+                        video
+                            .play()
+                            .catch(
+                                function () {}
+                            );
+                    }
+                };
+
+            events.appendChild(item);
+        }
+    );
 }
 
 
@@ -385,75 +598,129 @@ function drawTimeline() {
 ========================================================= */
 
 function drawPlayerStats() {
+    stats =
+        document.getElementById("stats");
+
     if (!stats) return;
 
     stats.innerHTML = "";
 
-    const playerEntries = Object.entries(players);
+    var playerEntries =
+        Object.entries(players);
 
-    if (playerEntries.length === 0) {
+    if (
+        playerEntries.length === 0
+    ) {
         stats.innerHTML =
-            '<div class="empty-message">아직 선수 데이터가 없습니다.</div>';
+            '<div class="empty-message">' +
+            "아직 선수 데이터가 없습니다." +
+            "</div>";
 
         return;
     }
 
-    playerEntries.forEach(function (entry) {
-        const name = entry[0];
-        const player = entry[1];
+    playerEntries.forEach(
+        function (entry) {
+            var name =
+                entry[0];
 
-        const fg =
-            player.fga > 0
-                ? Math.round(
-                    (player.fgm / player.fga) * 100
-                )
-                : 0;
+            var player =
+                entry[1];
 
-        const three =
-            player.threeA > 0
-                ? Math.round(
-                    (player.threeM / player.threeA) * 100
-                )
-                : 0;
+            var fg =
+                player.fga > 0
+                    ? Math.round(
+                        (
+                            player.fgm /
+                            player.fga
+                        ) * 100
+                    )
+                    : 0;
 
-        const ft =
-            player.fta > 0
-                ? Math.round(
-                    (player.ftm / player.fta) * 100
-                )
-                : 0;
+            var three =
+                player.threeA > 0
+                    ? Math.round(
+                        (
+                            player.threeM /
+                            player.threeA
+                        ) * 100
+                    )
+                    : 0;
 
-        const teamIcon =
-            player.team === "B" ? "🔴" : "🔵";
+            var ft =
+                player.fta > 0
+                    ? Math.round(
+                        (
+                            player.ftm /
+                            player.fta
+                        ) * 100
+                    )
+                    : 0;
 
-        const box = document.createElement("div");
+            var teamIcon =
+                player.team === "B"
+                    ? "🔴"
+                    : "🔵";
 
-        box.className = "player-stat-card";
+            var box =
+                document.createElement(
+                    "div"
+                );
 
-        box.innerHTML = `
-            <h3>${teamIcon} ${name}</h3>
+            box.className =
+                "player-stat-card";
 
-            <b>득점 ${player.pts}</b><br>
+            box.innerHTML =
+                "<h3>" +
+                teamIcon +
+                " " +
+                name +
+                "</h3>" +
 
-            FG ${player.fgm}/${player.fga}
-            · ${fg}%<br>
+                "<b>득점 " +
+                player.pts +
+                "</b><br>" +
 
-            3P ${player.threeM}/${player.threeA}
-            · ${three}%<br>
+                "FG " +
+                player.fgm +
+                "/" +
+                player.fga +
+                " · " +
+                fg +
+                "%<br>" +
 
-            FT ${player.ftm}/${player.fta}
-            · ${ft}%<br>
+                "3P " +
+                player.threeM +
+                "/" +
+                player.threeA +
+                " · " +
+                three +
+                "%<br>" +
 
-            REB ${player.reb}
-            · AST ${player.ast}<br>
+                "FT " +
+                player.ftm +
+                "/" +
+                player.fta +
+                " · " +
+                ft +
+                "%<br>" +
 
-            STL ${player.stl}
-            · BLK ${player.blk}
-            · TO ${player.to}
-        `;
+                "REB " +
+                player.reb +
+                " · AST " +
+                player.ast +
+                "<br>" +
 
-        stats.appendChild(box);
-    });
+                "STL " +
+                player.stl +
+                " · BLK " +
+                player.blk +
+                " · TO " +
+                player.to;
+
+            stats.appendChild(box);
+        }
+    );
 }
 
 
@@ -462,69 +729,104 @@ function drawPlayerStats() {
 ========================================================= */
 
 function makeAI() {
+    ai =
+        document.getElementById("ai");
+
     if (!ai) return;
 
-    const playerEntries = Object.entries(players);
+    var playerEntries =
+        Object.entries(players);
 
-    if (playerEntries.length === 0) {
-        ai.textContent = "아직 기록 없음";
+    if (
+        playerEntries.length === 0
+    ) {
+        ai.textContent =
+            "아직 기록 없음";
+
         return;
     }
 
-    const comments = [];
+    var comments = [];
 
-    playerEntries.forEach(function (entry) {
-        const name = entry[0];
-        const player = entry[1];
+    playerEntries.forEach(
+        function (entry) {
+            var name =
+                entry[0];
 
-        const fg =
-            player.fga > 0
-                ? Math.round(
-                    (player.fgm / player.fga) * 100
-                )
-                : 0;
+            var player =
+                entry[1];
 
-        if (player.pts >= 15) {
-            comments.push(
-                name + "은 득점력이 좋았습니다."
-            );
+            var fg =
+                player.fga > 0
+                    ? Math.round(
+                        (
+                            player.fgm /
+                            player.fga
+                        ) * 100
+                    )
+                    : 0;
+
+            if (
+                player.pts >= 15
+            ) {
+                comments.push(
+                    name +
+                    "은 득점력이 좋았습니다."
+                );
+            }
+
+            if (
+                fg >= 50 &&
+                player.fga >= 4
+            ) {
+                comments.push(
+                    name +
+                    "은 슛 효율이 좋았습니다."
+                );
+            }
+
+            if (
+                player.ast >= 5
+            ) {
+                comments.push(
+                    name +
+                    "은 패스 기여도가 높았습니다."
+                );
+            }
+
+            if (
+                player.reb >= 5
+            ) {
+                comments.push(
+                    name +
+                    "은 리바운드 기여도가 높았습니다."
+                );
+            }
+
+            if (
+                player.stl >= 3
+            ) {
+                comments.push(
+                    name +
+                    "은 수비 압박이 좋았습니다."
+                );
+            }
+
+            if (
+                player.to >= 3
+            ) {
+                comments.push(
+                    name +
+                    "은 턴오버 관리가 필요합니다."
+                );
+            }
         }
-
-        if (fg >= 50 && player.fga >= 4) {
-            comments.push(
-                name + "은 슛 효율이 좋았습니다."
-            );
-        }
-
-        if (player.ast >= 5) {
-            comments.push(
-                name + "은 패스 기여도가 높았습니다."
-            );
-        }
-
-        if (player.reb >= 5) {
-            comments.push(
-                name + "은 리바운드 기여도가 높았습니다."
-            );
-        }
-
-        if (player.stl >= 3) {
-            comments.push(
-                name + "은 수비 압박이 좋았습니다."
-            );
-        }
-
-        if (player.to >= 3) {
-            comments.push(
-                name + "은 턴오버 관리가 필요합니다."
-            );
-        }
-    });
+    );
 
     ai.textContent =
         comments.length > 0
             ? comments.join(" ")
-            : "기록이 더 쌓이면 AI 분석이 나옵니다.";
+            : "경기 기록이 정상적으로 분석되고 있습니다.";
 }
 
 
@@ -533,35 +835,84 @@ function makeAI() {
 ========================================================= */
 
 function back5() {
+    if (
+        typeof window.seekAnalysisTime ===
+            "function" &&
+        typeof window.getAnalysisTime ===
+            "function"
+    ) {
+        window.seekAnalysisTime(
+            window.getAnalysisTime() - 5
+        );
+
+        return;
+    }
+
+    video =
+        document.getElementById("video");
+
     if (!video) return;
 
-    video.currentTime = Math.max(
-        0,
-        video.currentTime - 5
-    );
+    video.currentTime =
+        Math.max(
+            0,
+            video.currentTime - 5
+        );
 }
 
 
 function forward5() {
+    if (
+        typeof window.seekAnalysisTime ===
+            "function" &&
+        typeof window.getAnalysisTime ===
+            "function"
+    ) {
+        window.seekAnalysisTime(
+            window.getAnalysisTime() + 5
+        );
+
+        return;
+    }
+
+    video =
+        document.getElementById("video");
+
     if (!video) return;
 
-    const maximum =
-        Number.isFinite(video.duration)
+    var maximum =
+        Number.isFinite(
+            video.duration
+        )
             ? video.duration
             : video.currentTime + 5;
 
-    video.currentTime = Math.min(
-        maximum,
-        video.currentTime + 5
-    );
+    video.currentTime =
+        Math.min(
+            maximum,
+            video.currentTime + 5
+        );
 }
 
 
 function playPause() {
+    if (
+        typeof window.toggleAnalysisVideo ===
+        "function"
+    ) {
+        window.toggleAnalysisVideo();
+        return;
+    }
+
+    video =
+        document.getElementById("video");
+
     if (!video) return;
 
     if (video.paused) {
-        video.play().catch(function () {});
+        video
+            .play()
+            .catch(function () {});
     } else {
         video.pause();
     }
@@ -569,6 +920,21 @@ function playPause() {
 
 
 function slow() {
+    if (
+        typeof window
+            .setAnalysisPlaybackRate ===
+        "function"
+    ) {
+        window.setAnalysisPlaybackRate(
+            0.5
+        );
+
+        return;
+    }
+
+    video =
+        document.getElementById("video");
+
     if (video) {
         video.playbackRate = 0.5;
     }
@@ -576,6 +942,21 @@ function slow() {
 
 
 function normal() {
+    if (
+        typeof window
+            .setAnalysisPlaybackRate ===
+        "function"
+    ) {
+        window.setAnalysisPlaybackRate(
+            1
+        );
+
+        return;
+    }
+
+    video =
+        document.getElementById("video");
+
     if (video) {
         video.playbackRate = 1;
     }
@@ -583,10 +964,32 @@ function normal() {
 
 
 function fast() {
+    if (
+        typeof window
+            .setAnalysisPlaybackRate ===
+        "function"
+    ) {
+        window.setAnalysisPlaybackRate(
+            2
+        );
+
+        return;
+    }
+
+    video =
+        document.getElementById("video");
+
     if (video) {
         video.playbackRate = 2;
     }
 }
+
+window.back5 = back5;
+window.forward5 = forward5;
+window.playPause = playPause;
+window.slow = slow;
+window.normal = normal;
+window.fast = fast;
 
 
 /* =========================================================
@@ -595,12 +998,17 @@ function fast() {
 
 function undoLastRecord() {
     if (records.length === 0) {
-        alert("취소할 기록이 없습니다.");
+        alert(
+            "취소할 기록이 없습니다."
+        );
         return;
     }
 
-    const removed = records.pop();
-    const player = players[removed.name];
+    var removed =
+        records.pop();
+
+    var player =
+        players[removed.name];
 
     if (!player) {
         draw();
@@ -610,78 +1018,180 @@ function undoLastRecord() {
 
     switch (removed.type) {
         case "2P 성공":
-            player.pts = Math.max(0, player.pts - 2);
-            player.fgm = Math.max(0, player.fgm - 1);
-            player.fga = Math.max(0, player.fga - 1);
+            player.pts =
+                Math.max(
+                    0,
+                    player.pts - 2
+                );
+
+            player.fgm =
+                Math.max(
+                    0,
+                    player.fgm - 1
+                );
+
+            player.fga =
+                Math.max(
+                    0,
+                    player.fga - 1
+                );
             break;
 
         case "2P 실패":
-            player.fga = Math.max(0, player.fga - 1);
+            player.fga =
+                Math.max(
+                    0,
+                    player.fga - 1
+                );
             break;
 
         case "3P 성공":
-            player.pts = Math.max(0, player.pts - 3);
-            player.fgm = Math.max(0, player.fgm - 1);
-            player.fga = Math.max(0, player.fga - 1);
+            player.pts =
+                Math.max(
+                    0,
+                    player.pts - 3
+                );
+
+            player.fgm =
+                Math.max(
+                    0,
+                    player.fgm - 1
+                );
+
+            player.fga =
+                Math.max(
+                    0,
+                    player.fga - 1
+                );
+
             player.threeM =
-                Math.max(0, player.threeM - 1);
+                Math.max(
+                    0,
+                    player.threeM - 1
+                );
+
             player.threeA =
-                Math.max(0, player.threeA - 1);
+                Math.max(
+                    0,
+                    player.threeA - 1
+                );
             break;
 
         case "3P 실패":
-            player.fga = Math.max(0, player.fga - 1);
+            player.fga =
+                Math.max(
+                    0,
+                    player.fga - 1
+                );
+
             player.threeA =
-                Math.max(0, player.threeA - 1);
+                Math.max(
+                    0,
+                    player.threeA - 1
+                );
             break;
 
         case "FT 성공":
-            player.pts = Math.max(0, player.pts - 1);
-            player.ftm = Math.max(0, player.ftm - 1);
-            player.fta = Math.max(0, player.fta - 1);
+            player.pts =
+                Math.max(
+                    0,
+                    player.pts - 1
+                );
+
+            player.ftm =
+                Math.max(
+                    0,
+                    player.ftm - 1
+                );
+
+            player.fta =
+                Math.max(
+                    0,
+                    player.fta - 1
+                );
             break;
 
         case "FT 실패":
-            player.fta = Math.max(0, player.fta - 1);
+            player.fta =
+                Math.max(
+                    0,
+                    player.fta - 1
+                );
             break;
 
         case "리바운드":
-            player.reb = Math.max(0, player.reb - 1);
+            player.reb =
+                Math.max(
+                    0,
+                    player.reb - 1
+                );
             break;
 
         case "어시스트":
-            player.ast = Math.max(0, player.ast - 1);
+            player.ast =
+                Math.max(
+                    0,
+                    player.ast - 1
+                );
             break;
 
         case "스틸":
-            player.stl = Math.max(0, player.stl - 1);
+            player.stl =
+                Math.max(
+                    0,
+                    player.stl - 1
+                );
             break;
 
         case "블록":
-            player.blk = Math.max(0, player.blk - 1);
+            player.blk =
+                Math.max(
+                    0,
+                    player.blk - 1
+                );
             break;
 
         case "턴오버":
-            player.to = Math.max(0, player.to - 1);
+            player.to =
+                Math.max(
+                    0,
+                    player.to - 1
+                );
             break;
     }
 
-    if (
-        removed.type === "2P 성공" ||
-        removed.type === "3P 성공" ||
-        removed.type === "FT 성공"
-    ) {
-        if (scoreHistoryA.length > 1) {
-            scoreHistoryA.pop();
-        }
-
-        if (scoreHistoryB.length > 1) {
-            scoreHistoryB.pop();
-        }
-    }
+    rebuildScoreHistory();
 
     drawScoreChart();
     draw();
+}
+
+window.undoLastRecord =
+    undoLastRecord;
+
+
+/* =========================================================
+   점수 흐름 다시 계산
+========================================================= */
+
+function rebuildScoreHistory() {
+    scoreHistoryA = [0];
+    scoreHistoryB = [0];
+
+    records.forEach(
+        function (recordItem) {
+            updateScoreHistory(
+                recordItem.team,
+                recordItem.type
+            );
+        }
+    );
+
+    window.scoreHistoryA =
+        scoreHistoryA;
+
+    window.scoreHistoryB =
+        scoreHistoryB;
 }
 
 
@@ -690,122 +1200,193 @@ function undoLastRecord() {
 ========================================================= */
 
 function drawScoreChart() {
-    const canvas =
-        document.getElementById("scoreChart");
+    var canvas =
+        document.getElementById(
+            "scoreChart"
+        );
 
     if (!canvas) return;
 
-    const context = canvas.getContext("2d");
+    var context =
+        canvas.getContext("2d");
 
     if (!context) return;
 
-    const width = canvas.width;
-    const height = canvas.height;
-    const padding = 35;
+    var width =
+        canvas.clientWidth || 800;
 
-    context.clearRect(0, 0, width, height);
+    var height =
+        canvas.clientHeight || 260;
 
-    context.fillStyle = "#111827";
-    context.fillRect(0, 0, width, height);
+    var ratio =
+        window.devicePixelRatio || 1;
 
-    context.strokeStyle = "#475569";
-    context.lineWidth = 1;
+    canvas.width =
+        width * ratio;
 
-    for (let index = 0; index <= 5; index += 1) {
-        const y =
-            padding +
-            ((height - padding * 2) / 5) * index;
+    canvas.height =
+        height * ratio;
 
+    context.setTransform(
+        ratio,
+        0,
+        0,
+        ratio,
+        0,
+        0
+    );
+
+    context.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+    var padding = 35;
+
+    var allScores =
+        scoreHistoryA.concat(
+            scoreHistoryB
+        );
+
+    var maximumScore =
+        Math.max(
+            10,
+            ...allScores
+        );
+
+    var count =
+        Math.max(
+            scoreHistoryA.length,
+            scoreHistoryB.length
+        );
+
+    function drawLine(
+        history,
+        strokeStyle
+    ) {
         context.beginPath();
-        context.moveTo(padding, y);
-        context.lineTo(width - padding, y);
+
+        history.forEach(
+            function (score, index) {
+                var x =
+                    padding +
+                    (
+                        index /
+                        Math.max(
+                            1,
+                            count - 1
+                        )
+                    ) *
+                    (
+                        width -
+                        padding * 2
+                    );
+
+                var y =
+                    height -
+                    padding -
+                    (
+                        score /
+                        maximumScore
+                    ) *
+                    (
+                        height -
+                        padding * 2
+                    );
+
+                if (index === 0) {
+                    context.moveTo(
+                        x,
+                        y
+                    );
+                } else {
+                    context.lineTo(
+                        x,
+                        y
+                    );
+                }
+            }
+        );
+
+        context.strokeStyle =
+            strokeStyle;
+
+        context.lineWidth = 3;
         context.stroke();
     }
 
-    const maxScore = Math.max(
-        10,
-        ...scoreHistoryA,
-        ...scoreHistoryB
-    );
+    context.strokeStyle =
+        "rgba(148,163,184,0.3)";
 
-    drawTeamLine(
-        context,
-        scoreHistoryA,
-        "#3b82f6",
-        width,
-        height,
-        padding,
-        maxScore
-    );
+    context.lineWidth = 1;
 
-    drawTeamLine(
-        context,
-        scoreHistoryB,
-        "#ef4444",
-        width,
-        height,
-        padding,
-        maxScore
-    );
-}
-
-
-function drawTeamLine(
-    context,
-    history,
-    color,
-    width,
-    height,
-    padding,
-    maxScore
-) {
-    if (!history || history.length === 0) return;
-
-    context.strokeStyle = color;
-    context.lineWidth = 4;
     context.beginPath();
 
-    history.forEach(function (score, index) {
-        const denominator =
-            Math.max(history.length - 1, 1);
+    context.moveTo(
+        padding,
+        height - padding
+    );
 
-        const x =
-            padding +
-            (index / denominator) *
-            (width - padding * 2);
-
-        const y =
-            height -
-            padding -
-            (score / maxScore) *
-            (height - padding * 2);
-
-        if (index === 0) {
-            context.moveTo(x, y);
-        } else {
-            context.lineTo(x, y);
-        }
-    });
+    context.lineTo(
+        width - padding,
+        height - padding
+    );
 
     context.stroke();
+
+    drawLine(
+        scoreHistoryA,
+        "#3b82f6"
+    );
+
+    drawLine(
+        scoreHistoryB,
+        "#ef4444"
+    );
 }
+
+window.drawScoreChart =
+    drawScoreChart;
 
 
 /* =========================================================
-   페이지 시작
+   최초 실행
 ========================================================= */
 
-window.addEventListener("load", function () {
-    draw();
-    drawScoreChart();
+window.addEventListener(
+    "load",
+    function () {
+        video =
+            document.getElementById(
+                "video"
+            );
 
-    safeCall("initCourt");
-    safeCall("renderPlayers2");
+        events =
+            document.getElementById(
+                "events"
+            );
 
-    const undoButton =
-        document.getElementById("undoBtn");
+        stats =
+            document.getElementById(
+                "stats"
+            );
 
-    if (undoButton) {
-        undoButton.onclick = undoLastRecord;
+        ai =
+            document.getElementById(
+                "ai"
+            );
+
+        drawScoreChart();
+        draw();
     }
-});
+);
+
+
+window.addEventListener(
+    "resize",
+    function () {
+        drawScoreChart();
+    }
+);
