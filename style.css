@@ -1466,3 +1466,55 @@ body {
     padding: 7px 5px;
     font-size: 13px;
 }
+/* 기록하기 입력 영역 더 압축 */
+
+.record-area {
+    padding: 10px !important;
+}
+
+.record-area h3 {
+    margin: 0 0 6px !important;
+    font-size: 18px;
+}
+
+#players2 {
+    padding: 6px !important;
+    margin-bottom: 6px !important;
+}
+
+.player-add-row {
+    grid-template-columns: minmax(0, 1fr) 74px !important;
+    gap: 6px !important;
+}
+
+.player-add-row input,
+.player-add-row button {
+    min-height: 36px !important;
+    height: 36px;
+    margin: 0 !important;
+}
+
+.player-add-row button {
+    width: 74px !important;
+    padding: 4px !important;
+    font-size: 12px;
+}
+
+.record-area > input,
+.record-area > select {
+    min-height: 36px !important;
+    height: 36px;
+    margin-bottom: 6px !important;
+}
+
+.record-button-grid {
+    margin-top: 5px !important;
+    gap: 5px !important;
+}
+
+.record-button-grid button {
+    min-height: 36px !important;
+    height: 36px;
+    padding: 4px !important;
+    font-size: 12px !important;
+}
