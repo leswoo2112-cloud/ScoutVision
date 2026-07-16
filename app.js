@@ -31,74 +31,118 @@ function makePlayer(name){
   }
 }
 
-function record(type){
+function record(type) {
     const playerInput = document.getElementById("player");
-    const name = playerInput ? playerInput.value.trim() : "";
+
+    const name =
+        typeof selectedPlayer2 !== "undefined" && selectedPlayer2
+            ? selectedPlayer2
+            : playerInput
+                ? playerInput.value.trim()
+                : "";
 
     const team =
-        typeof selectedPlayerTeam2 !== "undefined" &&
-        selectedPlayerTeam2
+        typeof selectedPlayerTeam2 !== "undefined" && selectedPlayerTeam2
             ? selectedPlayerTeam2
             : "A";
-  if(!name){
-    alert("선수 이름 입력!");
-    return;
-  }
 
-  makePlayer(name);
-  const p = players[name];
-
-  if(type === "2P 성공"){ p.pts += 2; p.fgm++; p.fga++; }
-  if(type === "2P 실패"){ p.fga++; }
-  if(type === "3P 성공"){ p.pts += 3; p.fgm++; p.fga++; p.threeM++; p.threeA++; }
-  if(type === "3P 실패"){ p.fga++; p.threeA++; }
-  if(type === "FT 성공"){ p.pts += 1; p.ftm++; p.fta++; }
-  if(type === "FT 실패"){ p.fta++; }
-  if(type === "리바운드"){ p.reb++; }
-  if(type === "어시스트"){ p.ast++; }
-  if(type === "스틸"){ p.stl++; }
-  if(type === "블록"){ p.blk++; }
-  if(type === "턴오버"){ p.to++; }
-
-  const t = video ? (video.currentTime || 0) : 0;
-
-  records.push({
-    team: team,
-    name: name,
-    type: type,
-    time: t
-  });
-  const lastA = scoreHistoryA[scoreHistoryA.length - 1];
-const lastB = scoreHistoryB[scoreHistoryB.length - 1];
-
-if(type === "2P 성공"){
-    if(team === "A"){
-        scoreHistoryA.push(lastA + 2);
-        scoreHistoryB.push(lastB);
-    }else{
-        scoreHistoryA.push(lastA);
-        scoreHistoryB.push(lastB + 2);
+    if (!name) {
+        alert("먼저 A팀 또는 B팀 선수를 선택해주세요!");
+        return;
     }
-}
 
-if(type === "3P 성공"){
-    if(team === "A"){
-        scoreHistoryA.push(lastA + 3);
-        scoreHistoryB.push(lastB);
-    }else{
-        scoreHistoryA.push(lastA);
-        scoreHistoryB.push(lastB + 3);
-    }
-}
+    makePlayer(name);
 
-if(type === "FT 성공"){
-    if(team === "A"){
-        scoreHistoryA.push(lastA + 1);
-        scoreHistoryB.push(lastB);
-    }else{
-        scoreHistoryA.push(lastA);
-        scoreHistoryB.push(lastB + 1);
+    const p = players[name];
+    p.team = team;
+
+    if (type === "2P 성공") {
+        p.pts += 2;
+        p.fgm++;
+        p.fga++;
     }
+
+    if (type === "2P 실패") {
+        p.fga++;
+    }
+
+    if (type === "3P 성공") {
+        p.pts += 3;
+        p.fgm++;
+        p.fga++;
+        p.threeM++;
+        p.threeA++;
+    }
+
+    if (type === "3P 실패") {
+        p.fga++;
+        p.threeA++;
+    }
+
+    if (type === "FT 성공") {
+        p.pts += 1;
+        p.ftm++;
+        p.fta++;
+    }
+
+    if (type === "FT 실패") {
+        p.fta++;
+    }
+
+    if (type === "리바운드") p.reb++;
+    if (type === "어시스트") p.ast++;
+    if (type === "스틸") p.stl++;
+    if (type === "블록") p.blk++;
+    if (type === "턴오버") p.to++;
+
+    const t = video ? video.currentTime || 0 : 0;
+
+    records.push({
+        team: team,
+        name: name,
+        type: type,
+        time: t
+    });
+
+    const lastA = scoreHistoryA[scoreHistoryA.length - 1];
+    const lastB = scoreHistoryB[scoreHistoryB.length - 1];
+
+    if (type === "2P 성공") {
+        if (team === "A") {
+            scoreHistoryA.push(lastA + 2);
+            scoreHistoryB.push(lastB);
+        } else {
+            scoreHistoryA.push(lastA);
+            scoreHistoryB.push(lastB + 2);
+        }
+    }
+
+    if (type === "3P 성공") {
+        if (team === "A") {
+            scoreHistoryA.push(lastA + 3);
+            scoreHistoryB.push(lastB);
+        } else {
+            scoreHistoryA.push(lastA);
+            scoreHistoryB.push(lastB + 3);
+        }
+    }
+
+    if (type === "FT 성공") {
+        if (team === "A") {
+            scoreHistoryA.push(lastA + 1);
+            scoreHistoryB.push(lastB);
+        } else {
+            scoreHistoryA.push(lastA);
+            scoreHistoryB.push(lastB + 1);
+        }
+    }
+
+    if (playerInput) {
+        playerInput.value = name;
+    }
+
+    drawScoreChart();
+    draw();
 }
 
 drawScoreChart();
