@@ -1809,3 +1809,119 @@ body {
         font-size: 17px;
     }
 }
+/* ========================================
+   선수 분석 카드 정리
+======================================== */
+
+#stats {
+    display: grid !important;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(280px, 1fr)
+    ) !important;
+    gap: 18px !important;
+    width: 100% !important;
+    margin-bottom: 24px !important;
+}
+
+.player-stat-card {
+    padding: 22px !important;
+    border: 1px solid rgba(148, 163, 184, 0.22) !important;
+    border-radius: 18px !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(15, 23, 42, 0.96),
+            rgba(17, 30, 55, 0.92)
+        ) !important;
+
+    box-shadow:
+        0 14px 30px rgba(0, 0, 0, 0.22) !important;
+
+    line-height: 1.8 !important;
+}
+
+.player-stat-card h3 {
+    margin: 0 0 16px !important;
+    padding-bottom: 12px !important;
+
+    border-bottom:
+        1px solid rgba(148, 163, 184, 0.18) !important;
+
+    font-size: 24px !important;
+}
+
+.player-stat-card b {
+    display: inline-block !important;
+
+    margin-bottom: 8px !important;
+
+    color: #f8fafc !important;
+    font-size: 22px !important;
+}
+
+.player-stat-card br {
+    line-height: 2 !important;
+}
+
+/* 슛 성공률 영역 */
+#shotChart {
+    width: 100% !important;
+    margin-top: 18px !important;
+    padding: 20px !important;
+
+    box-sizing: border-box !important;
+
+    border: 1px solid rgba(148, 163, 184, 0.22) !important;
+    border-radius: 18px !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(15, 23, 42, 0.96),
+            rgba(17, 30, 55, 0.92)
+        ) !important;
+}
+
+/* 성공률 바 */
+#shotChart > div {
+    max-width: 100% !important;
+}
+
+/* 기록 타임라인도 줄 단위로 정리 */
+#events {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+.timeline-item {
+    padding: 11px 14px !important;
+
+    border: 1px solid rgba(148, 163, 184, 0.14) !important;
+    border-radius: 10px !important;
+
+    background: rgba(15, 23, 42, 0.65) !important;
+
+    cursor: pointer !important;
+}
+
+.timeline-item:hover {
+    background: rgba(37, 99, 235, 0.18) !important;
+}
+
+/* iPad 화면 */
+@media (max-width: 900px) {
+    #stats {
+        grid-template-columns: 1fr !important;
+    }
+
+    .player-stat-card {
+        padding: 18px !important;
+    }
+
+    .player-stat-card h3 {
+        font-size: 21px !important;
+    }
+}
