@@ -25,6 +25,23 @@ function addPlayer2(team) {
         teamPlayers2[team].push(name);
     }
 
+// 기존 기록 시스템에도 선수 등록
+if (typeof players !== "undefined") {
+    if (!players[name]) {
+        players[name] = {
+            name: name,
+            team: team,
+            pts: 0,
+            reb: 0,
+            ast: 0,
+            stl: 0,
+            blk: 0,
+            to: 0,
+            fgm: 0,
+            fga: 0
+        };
+    }
+}
     input.value = "";
     renderPlayers2();
 }
